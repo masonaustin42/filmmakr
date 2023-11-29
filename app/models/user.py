@@ -13,6 +13,14 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(40), nullable=False, unique=True)
     email = db.Column(db.String(255), nullable=False, unique=True)
     hashed_password = db.Column(db.String(255), nullable=False)
+    first_name = db.Column(db.String(255), nullable=False)
+    last_name = db.Column(db.String(255), nullable=False)
+    bio = db.Column(db.String(1500))
+    profile_pic_url = db.Column(db.String(1500))
+    portfolio_pic_url = db.Column(db.String(1500))
+    
+    galleries = db.relationship('Gallery', back_populates='owner') # maybe add cascade='all, delete-orphan'
+    
 
     @property
     def password(self):
@@ -29,5 +37,19 @@ class User(db.Model, UserMixin):
         return {
             'id': self.id,
             'username': self.username,
-            'email': self.email
+            'email': self.email,
+            'name': f"{self.first_name} {self.last_name}",
+            'profile_pic': self.profile_pic_url
+        }
+        
+    def to_dict_full(self):
+        return {
+            'id': self.id,
+            'username': self.username,
+            'email': self.email,
+            'name': f"{self.first_name} {self.last_name}",
+            'bio': self.bio,
+            'profile_pic': self.profile_pic_url,
+            'portfolio_pic': self.portfolio_pic_url,
+            'galleries': self.galleries
         }
