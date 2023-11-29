@@ -42,6 +42,5 @@ class Gallery(db.Model):
             'title': self.title,
             'date': self.date,
             'is_public': self.is_public,
-            'owner': self.owner,
-            'items': self.items
+            'items': [item.to_dict() for item in self.items]
         }

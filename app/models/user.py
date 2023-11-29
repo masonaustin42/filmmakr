@@ -51,5 +51,5 @@ class User(db.Model, UserMixin):
             'bio': self.bio,
             'profile_pic': self.profile_pic_url,
             'portfolio_pic': self.portfolio_pic_url,
-            'galleries': self.galleries
+            'galleries': [gallery.to_dict() for gallery in self.galleries]
         }

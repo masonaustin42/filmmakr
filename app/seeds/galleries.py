@@ -1,25 +1,23 @@
-from app.models import db, User, environment, SCHEMA
+from app.models import db, Gallery, environment, SCHEMA
 from werkzeug.security import generate_password_hash
 from sqlalchemy.sql import text
 import csv
+from datetime import date
 
 
-def seed_users():
-    with open("app/seeds/users.csv", "r") as file:
+def seed_galleries():
+    with open("app/seeds/galleries.csv", "r") as file:
         csvreader = csv.reader(file)
         fields = next(csvreader)
         for row in csvreader:
-            user = User(
-                username = row[0],
-                email = row[1],
+            gallery = Gallery(
+                title = row[0],
+                date = date.fromisoformat(row[1]),
                 hashed_password = generate_password_hash(row[2]),
-                first_name = row[3],
-                last_name = row[4],
-                profile_pic_url = row[5],
-                portfolio_pic_url = row[6],
-                bio = row[7]
+                owner_id = int(row[3]),
+                is_public = True if row[4] == "True" else False
             )
-            db.session.add(user)
+            db.session.add(gallery)
             db.session.commit()
 
 # Uses a raw SQL query to TRUNCATE or DELETE the users table. SQLAlchemy doesn't
@@ -28,10 +26,10 @@ def seed_users():
 # incrementing primary key, CASCADE deletes any dependent entities.  With
 # sqlite3 in development you need to instead use DELETE to remove all data and
 # it will reset the primary keys for you as well.
-def undo_users():
+def undo_galleries():
     if environment == "production":
-        db.session.execute(f"TRUNCATE table {SCHEMA}.users RESTART IDENTITY CASCADE;")
+        db.session.execute(f"TRUNCATE table {SCHEMA}.galleries RESTART IDENTITY CASCADE;")
     else:
-        db.session.execute(text("DELETE FROM users"))
+        db.session.execute(text("DELETE FROM galleries"))
         
     db.session.commit()
