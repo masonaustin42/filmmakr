@@ -1,0 +1,2 @@
+title,date(iso_format),password,owner_id,is_public
+"Demo Gallery","2023-11-29",,1,True
