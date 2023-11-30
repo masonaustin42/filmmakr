@@ -1,2 +1,3 @@
-title,date(iso_format),password,owner_id,is_public
-"Demo Gallery","2023-11-29",,1,True
+title,date(iso_format),password,owner_id
+"Demo Gallery","2023-11-29",,1
+"Demo with Password",,password,1

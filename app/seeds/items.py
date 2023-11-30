@@ -16,7 +16,7 @@ def seed_items():
                 media_url = row[3]
             )
             db.session.add(item)
-            db.session.commit()
+        db.session.commit()
 
 # Uses a raw SQL query to TRUNCATE or DELETE the users table. SQLAlchemy doesn't
 # have a built in function to do this. With postgres in production TRUNCATE

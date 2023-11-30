@@ -11,10 +11,20 @@ gallery_routes = Blueprint('galleries', __name__)
 def get_gallery(galleryId):
     gallery = Gallery.query.get(galleryId)
     
-    if gallery:
-        return { "gallery": gallery.to_dict()}
-    else:
+    password = request.args.get("p") if request.args.get("p") else ""
+    print("PASSWORD: ", password)
+    
+    if not gallery:
         return { "errors": "Gallery not found"}, 404
+    
+    if gallery.hashed_password is not None:
+        print("CHECKING_PASSWORD", gallery.hashed_password, gallery.check_password(password))
+        if gallery.check_password(password):
+            return { "gallery": gallery.to_dict()}
+        else:
+            return { "errors": "Incorrect password"}, 403
+    else:
+        return {"gallery": gallery.to_dict()}
     
 @gallery_routes.route("/", methods=["POST"])
 @login_required
