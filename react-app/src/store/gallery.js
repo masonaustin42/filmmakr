@@ -5,25 +5,23 @@ const setGallery = (gallery) => ({
   payload: gallery,
 });
 
-export const fetchGallery =
-  (galleryId, password = null) =>
-  async (dispatch) => {
-    const response = await fetch(
-      `/api/galleries/${galleryId}${password && `?p=${password}`}`
-    );
-    if (response.ok) {
-      const data = await response.json();
-      if (data.errors) {
-        return;
-      }
-      dispatch(setGallery(data));
+export const fetchGallery = (galleryId, password) => async (dispatch) => {
+  const response = await fetch(
+    `/api/galleries/${galleryId}${password !== "null" && `?p=${password}`}`
+  );
+  if (response.ok) {
+    const data = await response.json();
+    if (data.errors) {
+      return data;
     }
-  };
+    dispatch(setGallery(data.gallery));
+  }
+};
 
 export default function galleryReducer(state = {}, action) {
   switch (action.type) {
     case SET_GALLERY:
-      return { gallery: action.payload };
+      return action.payload;
 
     default:
       return state;
