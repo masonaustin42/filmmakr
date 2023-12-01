@@ -51,7 +51,7 @@ def post_gallery():
         return {'errors': validation_errors_to_error_messages(form.errors)}, 400
     
 
-@gallery_routes.route("/<int:galleryId>", methods=["POST"])
+@gallery_routes.route("/<int:galleryId>", methods=["PUT"])
 @login_required
 def update_gallery(galleryId):
     form = GalleryForm()
@@ -64,10 +64,14 @@ def update_gallery(galleryId):
         return { "errors": "Gallery not found"}, 404
     
     if form.validate_on_submit():
-        gallery.title = form.data["title"]
-        gallery.date = form.data["date"]
-        gallery.password = form.data["password"]
-        gallery.is_public = form.data["is_public"]
+        if form.data["title"]:
+            gallery.title = form.data["title"]
+        if form.data["date"]:
+            gallery.date = form.data["date"]
+        if form.data["password"]:
+            gallery.password = form.data["password"]
+        if form.data["is_public"]:
+            gallery.is_public = form.data["is_public"]
         
         db.session.commit()
         return gallery.to_dict()

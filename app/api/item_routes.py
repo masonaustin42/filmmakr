@@ -28,7 +28,7 @@ def delete_item(itemId):
     return { "status": "success" }, 202
 
 
-@item_routes.route("/<int:itemId>", methods=["POST"])
+@item_routes.route("/<int:itemId>", methods=["PUT"])
 @login_required
 def update_item(itemId):
     item = Item.query.get(itemId)
