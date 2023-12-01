@@ -1,8 +1,9 @@
 from flask import Blueprint, jsonify, session, request
-from app.models import Gallery, db
+from app.models import Gallery, Item, db
 from . import validation_errors_to_error_messages
 from flask_login import current_user, login_required
-from app.forms import GalleryForm
+from app.forms import GalleryForm, ItemForm
+from .aws_helpers import *
 
 gallery_routes = Blueprint('galleries', __name__)
 
@@ -86,4 +87,41 @@ def delete_gallery(galleryId):
     db.session.delete(gallery)
     db.session.commit()
     return {"status": "success"}, 202
+    
+    
+@gallery_routes.route("/<int:galleryId>/items", methods=["POST"])
+@login_required
+def post_item(galleryId):
+    
+    gallery = Gallery.query.get(galleryId)
+    
+    if not gallery or gallery.owner_id != current_user.id:
+        return {"errors": "Gallery not found"}, 404
+    
+    form = ItemForm()
+    form['csrf_token'].data = request.cookies['csrf_token']
+    
+    if form.validate_on_submit():
+        media = form.data["media"]
+        media.filename = get_unique_filename(media.filename)
+        upload = upload_file_to_s3(media)
+        
+        if "url" not in upload:
+            return upload, 500
+        
+        item = Item(
+            name = form["name"],
+            media_url = f"{CLOUDFRONT_URL}/{media.filename}",
+            media_type = media.filename.rsplit(".", 1)[1].lower(),
+            gallery_id = galleryId
+        )
+        
+        db.session.add(item)
+        db.session.commit()
+        
+        return item.to_dict(), 200
+    
+    if form.errors:
+        return form.errors
+    
     
