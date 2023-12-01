@@ -5,6 +5,7 @@ import { authenticate } from "./store/session";
 import Navigation from "./components/Navigation";
 import Gallery from "./components/GalleryPage";
 import Profile from "./components/ProfilePage";
+import HomePage from "./components/HomePage";
 
 function App() {
   const dispatch = useDispatch();
@@ -18,6 +19,9 @@ function App() {
       <Navigation isLoaded={isLoaded} />
       {isLoaded && (
         <Switch>
+          <Route exact path="/">
+            <HomePage />
+          </Route>
           <Route path="/galleries/:galleryId">
             <Gallery />
           </Route>

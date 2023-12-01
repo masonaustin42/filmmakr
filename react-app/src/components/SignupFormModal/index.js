@@ -67,7 +67,7 @@ function SignupFormModal() {
     <>
       <h1>Sign Up</h1>
       {Object.values(errors).map((error) => (
-        <p>{error}</p>
+        <p key={error}>{error}</p>
       ))}
       <form onSubmit={handleSubmit}>
         <label>

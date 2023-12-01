@@ -12,7 +12,7 @@ def delete_item(itemId):
     item = Item.query.get(itemId)
     
     if not item:
-        return { "errors": "Gallery not found"}, 404
+        return { "errors": "Item not found"}, 404
     
     if item.gallery.owner_id != current_user.id:
         return { "errors": "Unauthorized" }, 403
@@ -34,7 +34,7 @@ def update_item(itemId):
     item = Item.query.get(itemId)
     
     if not item:
-        return { "errors": "Gallery not found"}, 404
+        return { "errors": "Item not found"}, 404
     
     if item.gallery.owner_id != current_user.id:
         return { "errors": "Unauthorized" }, 403
