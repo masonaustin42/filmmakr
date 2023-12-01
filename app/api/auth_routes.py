@@ -5,6 +5,7 @@ from app.forms import SignUpForm
 from flask_login import current_user, login_user, logout_user, login_required
 from . import validation_errors_to_error_messages
 import re
+from .aws_helpers import *
 
 auth_routes = Blueprint('auth', __name__)
 
@@ -58,16 +59,41 @@ def sign_up():
     form = SignUpForm()
     form['csrf_token'].data = request.cookies['csrf_token']
     if form.validate_on_submit():
+        
+        if form.data["profile_pic"]:
+            profile_pic = form.data["profile_pic"]
+            profile_pic.filename = get_unique_filename(profile_pic.filename)
+            profileUpload = upload_file_to_s3(profile_pic)
+            if "url" not in profileUpload:
+                return profileUpload, 500
+        
+        if form.data["portfolio_pic"]:
+            portfolio_pic = form.data["portfolio_pic"]
+            portfolio_pic.filename = get_unique_filename(portfolio_pic.filename)
+            portfolioUpload = upload_file_to_s3(portfolio_pic)
+            if "url" not in portfolioUpload:
+                return portfolioUpload, 500
+        
         user = User(
             username=form.data['username'],
             email=form.data['email'],
-            password=form.data['password']
+            password=form.data['password'],
+            first_name=form.data['first_name'],
+            last_name=form.data['last_name'],
+            bio=form.data["bio"]
         )
+        
+        if form.data["profile_pic"]:
+            user.profile_pic_url = f"{CLOUDFRONT_URL}/{profile_pic.filename}"
+            
+        if form.data["portfolio_pic"]:
+            user.portfolio_pic_url = f"{CLOUDFRONT_URL}/{portfolio_pic.filename}"
+        
         db.session.add(user)
         db.session.commit()
         login_user(user)
         return user.to_dict()
-    return {'errors': validation_errors_to_error_messages(form.errors)}, 401
+    return {'errors': form.errors}, 401
 
 
 @auth_routes.route('/unauthorized')
