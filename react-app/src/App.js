@@ -6,6 +6,7 @@ import LoginFormPage from "./components/LoginFormPage";
 import { authenticate } from "./store/session";
 import Navigation from "./components/Navigation";
 import Gallery from "./components/GalleryPage";
+import Profile from "./components/ProfilePage";
 
 function App() {
   const dispatch = useDispatch();
@@ -27,6 +28,9 @@ function App() {
           </Route>
           <Route path="/galleries/:galleryId">
             <Gallery />
+          </Route>
+          <Route path="/profiles/:profileUsername">
+            <Profile />
           </Route>
         </Switch>
       )}
