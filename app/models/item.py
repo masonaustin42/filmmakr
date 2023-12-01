@@ -22,3 +22,12 @@ class Item(db.Model):
             'type': self.media_type,
             'url': self.media_url
         }
+        
+    def to_dict_full(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "type": self.media_type,
+            "url": self.media_url,
+            "gallery": self.gallery
+        }

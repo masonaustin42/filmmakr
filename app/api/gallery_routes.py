@@ -25,7 +25,7 @@ def get_gallery(galleryId):
         else:
             return { "errors": "Incorrect password"}, 403
     else:
-        return {"gallery": gallery.to_dict()}
+        return {"gallery": gallery.to_dict_full()}
     
 @gallery_routes.route("/", methods=["POST"])
 @login_required
@@ -110,7 +110,7 @@ def post_item(galleryId):
             return upload, 500
         
         item = Item(
-            name = form["name"],
+            name = form.data["name"],
             media_url = f"{CLOUDFRONT_URL}/{media.filename}",
             media_type = media.filename.rsplit(".", 1)[1].lower(),
             gallery_id = galleryId
