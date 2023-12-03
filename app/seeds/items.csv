@@ -1,2 +1,2 @@
-name,gallery_id,media_type,media_url
-"Demo Item",1,"mp4","test.com"
+name,gallery_id,media_type,media_url,is_main
+"Demo Item",1,"mp4","test.com",True
