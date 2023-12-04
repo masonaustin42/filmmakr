@@ -21,7 +21,7 @@ def get_gallery(galleryId):
     if gallery.hashed_password is not None:
         print("CHECKING_PASSWORD", gallery.hashed_password, gallery.check_password(password))
         if gallery.check_password(password):
-            return { "gallery": gallery.to_dict()}
+            return { "gallery": gallery.to_dict_full()}
         else:
             return { "errors": "Incorrect password"}, 403
     else:
@@ -41,6 +41,16 @@ def post_gallery():
             is_public = form.data["is_public"],
             owner_id = current_user.id
         )
+        
+        if form.data["preview"]:
+            preview = form.data["preview"]
+            preview.filename = get_unique_filename(preview.filename)
+            upload = upload_file_to_s3(preview)
+            
+            if "url" not in upload:
+                return upload, 500
+            
+            gallery.preview = f"{CLOUDFRONT_URL}/{preview.filename}"
         
         db.session.add(gallery)
         db.session.commit()

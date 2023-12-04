@@ -21,7 +21,15 @@ export const fetchGallery = (galleryId, password) => async (dispatch) => {
 export default function galleryReducer(state = {}, action) {
   switch (action.type) {
     case SET_GALLERY:
-      return action.payload;
+      const gallery = action.payload;
+      const normalizedItems = {};
+      for (let i in gallery.items) {
+        let item = gallery.items[i];
+        if (item.is_main) normalizedItems.main = item;
+        else normalizedItems[item.id] = item;
+      }
+      gallery.items = normalizedItems;
+      return gallery;
 
     default:
       return state;

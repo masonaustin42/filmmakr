@@ -1,9 +1,12 @@
 from flask_wtf import FlaskForm
+from flask_wtf.file import FileField, FileAllowed
 from wtforms import StringField, DateField, BooleanField
-from wtforms.validators import DataRequired, Email, ValidationError
+from wtforms.validators import DataRequired
+from app.api.aws_helpers import ALLOWED_EXTENSIONS_NO_AUDIO
 
 class GalleryForm(FlaskForm):
     title = StringField('title', validators=[DataRequired()])
     date = DateField('date')
     password = StringField('password')
     is_public = BooleanField('is public')
+    preview = FileField('preview', validators=[FileAllowed(list(ALLOWED_EXTENSIONS_NO_AUDIO))])

@@ -14,7 +14,8 @@ def seed_galleries():
                 title = row[0],
                 date = None if row[1] == "" else date.fromisoformat(row[1]),
                 hashed_password = None if row[2] == "" else generate_password_hash(row[2]),
-                owner_id = int(row[3])
+                owner_id = int(row[3]),
+                preview_url = None if row[4] == "" else row[4]
             )
             db.session.add(gallery)
         db.session.commit()

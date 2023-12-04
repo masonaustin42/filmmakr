@@ -41,6 +41,7 @@ class ProgressPercentage(object):
 
 
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "mp4", "avi", "mov", "mp3", "wav", "wmv", "aiff" }
+ALLOWED_EXTENSIONS_NO_AUDIO = {"png", "jpg", "jpeg", "mp4", "avi", "mov"}
 BUCKET_NAME = os.environ.get("S3_BUCKET")
 S3_LOCATION = f"http://{BUCKET_NAME}.s3.amazonaws.com/"
 CLOUDFRONT_URL = os.environ.get("CLOUDFRONT_URL")

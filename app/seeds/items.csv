@@ -1,2 +1,15 @@
 name,gallery_id,media_type,media_url,is_main
 "Demo Item",1,"mp4","test.com",True
+"The Binghams",3,"mov","https://d2t8ka78u48u9v.cloudfront.net/seeders/The Binghams FINAL.mov",True
+,3,"mp4","https://d2t8ka78u48u9v.cloudfront.net/seeders/binghams-1.mp4",False
+,3,"mp4","https://d2t8ka78u48u9v.cloudfront.net/seeders/binghams-2.mp4",False
+,3,"mp4","https://d2t8ka78u48u9v.cloudfront.net/seeders/binghams-3.MP4",False
+,3,"mp4","https://d2t8ka78u48u9v.cloudfront.net/seeders/binghams-4.MP4",False
+,3,"mp4","https://d2t8ka78u48u9v.cloudfront.net/seeders/binghams-6.MP4",False
+,3,"mp4","https://d2t8ka78u48u9v.cloudfront.net/seeders/binghams-7.MP4",False
+"Nesting Club",4,"mov","https://d2t8ka78u48u9v.cloudfront.net/seeders/Nesting Club Live.mov",True
+,4,"mp4","https://d2t8ka78u48u9v.cloudfront.net/seeders/nesting-club-1.MP4",False
+,4,"mp4","https://d2t8ka78u48u9v.cloudfront.net/seeders/nesting-club-2.MP4",False
+,4,"mp4","https://d2t8ka78u48u9v.cloudfront.net/seeders/nesting-club-3.MP4",False
+,4,"mp4","https://d2t8ka78u48u9v.cloudfront.net/seeders/nesting-club-4.MP4",False
+,4,"mp4","https://d2t8ka78u48u9v.cloudfront.net/seeders/nesting-club-5.MP4",False
