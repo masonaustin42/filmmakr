@@ -4,6 +4,7 @@ from . import validation_errors_to_error_messages
 from flask_login import current_user, login_required
 from app.forms import GalleryForm, ItemForm
 from .aws_helpers import *
+from datetime import date
 
 gallery_routes = Blueprint('galleries', __name__)
 
@@ -27,7 +28,7 @@ def get_gallery(galleryId):
     else:
         return {"gallery": gallery.to_dict_full()}
     
-@gallery_routes.route("/", methods=["POST"])
+@gallery_routes.route("/new", methods=["POST"])
 @login_required
 def post_gallery():
     form = GalleryForm()
@@ -36,11 +37,12 @@ def post_gallery():
     if form.validate_on_submit():
         gallery = Gallery(
             title = form.data["title"],
-            date = form.data["date"],
             password = form.data["password"],
-            is_public = form.data["is_public"],
             owner_id = current_user.id
         )
+        
+        if form.data["date"]:
+            gallery.date = date.fromisoformat(str(form.data["date"]))
         
         if form.data["preview"]:
             preview = form.data["preview"]
@@ -58,7 +60,7 @@ def post_gallery():
         return gallery.to_dict()
         
     if form.errors:
-        return {'errors': validation_errors_to_error_messages(form.errors)}, 400
+        return {'errors': form.errors}, 400
     
 
 @gallery_routes.route("/<int:galleryId>", methods=["PUT"])

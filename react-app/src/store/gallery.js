@@ -18,6 +18,17 @@ export const fetchGallery = (galleryId, password) => async (dispatch) => {
   }
 };
 
+export const createGallery = (formdata) => async (dispatch) => {
+  const response = await fetch(`/api/galleries/new`, {
+    method: "POST",
+    body: formdata,
+  });
+  if (response.ok) {
+    const data = await response.json();
+    return data;
+  }
+};
+
 export default function galleryReducer(state = {}, action) {
   switch (action.type) {
     case SET_GALLERY:

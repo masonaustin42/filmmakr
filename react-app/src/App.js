@@ -6,6 +6,7 @@ import Navigation from "./components/Navigation";
 import Gallery from "./components/GalleryPage";
 import Profile from "./components/ProfilePage";
 import HomePage from "./components/HomePage";
+import NewGallery from "./components/NewGalleryPage";
 
 function App() {
   const dispatch = useDispatch();
@@ -21,6 +22,9 @@ function App() {
         <Switch>
           <Route exact path="/">
             <HomePage />
+          </Route>
+          <Route path="/galleries/new">
+            <NewGallery />
           </Route>
           <Route path="/galleries/:galleryId">
             <Gallery />
