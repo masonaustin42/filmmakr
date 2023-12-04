@@ -12,7 +12,7 @@ class Gallery(db.Model):
     title = db.Column(db.String(255), nullable=False)
     date = db.Column(db.Date)
     hashed_password = db.Column(db.String(255))
-    is_public = db.Column(db.Boolean, default=True)
+    preview_url = db.Column(db.String(2000))
     
     owner = db.relationship("User", back_populates="galleries")
     items = db.relationship("Item", back_populates="gallery")
@@ -32,8 +32,7 @@ class Gallery(db.Model):
         return {
             'id': self.id,
             'title': self.title,
-            'date': self.date,
-            'is_public': self.is_public
+            'date': self.date
         }
         
     def to_dict_full(self):
@@ -41,6 +40,6 @@ class Gallery(db.Model):
             'id': self.id,
             'title': self.title,
             'date': self.date,
-            'is_public': self.is_public,
-            'items': [item.to_dict() for item in self.items]
+            'items': [item.to_dict() for item in self.items],
+            'preview': self.preview_url
         }

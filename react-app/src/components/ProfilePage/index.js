@@ -1,0 +1,52 @@
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchProfile } from "../../store/user_profile";
+import { useParams, Link } from "react-router-dom/cjs/react-router-dom.min";
+
+function Profile() {
+  const [galleries, setGalleries] = useState([]);
+  const [isCurrentUser, setIsCurrentUser] = useState(false);
+  const profile = useSelector((state) => state.profile);
+  const user = useSelector((state) => state.session.user);
+  const { profileUsername } = useParams();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (user?.username === profileUsername) {
+      dispatch(fetchProfile(profileUsername, true));
+    } else {
+      dispatch(fetchProfile(profileUsername));
+    }
+  }, [dispatch, user, profileUsername]);
+
+  useEffect(() => {
+    if (profile.galleries) {
+      setGalleries(Object.values(profile.galleries));
+    }
+  }, [profile]);
+
+  useEffect(() => {
+    if (user?.username === profileUsername) setIsCurrentUser(true);
+    else setIsCurrentUser(false);
+  }, [profileUsername, user]);
+
+  if (!profile) return null;
+
+  return (
+    <>
+      <h1>{profile.name}</h1>
+      <p>{profile.bio}</p>
+      <ul>
+        {galleries.length &&
+          galleries.map((gallery) => (
+            <li key={gallery.id}>
+              <Link to={`/galleries/${gallery.id}`}>{gallery.title}</Link>
+              {isCurrentUser && <button>Edit</button>}
+            </li>
+          ))}
+      </ul>
+    </>
+  );
+}
+
+export default Profile;

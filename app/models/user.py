@@ -42,14 +42,23 @@ class User(db.Model, UserMixin):
             'profile_pic': self.profile_pic_url
         }
         
-    def to_dict_full(self):
+    def to_dict_profile(self):
         return {
-            'id': self.id,
+            'username': self.username,
+            'name': f"{self.first_name} {self.last_name}",
+            'bio': self.bio,
+            'profile_pic': self.profile_pic_url,
+            'portfolio_pic': self.portfolio_pic_url,
+            'galleries': [gallery.to_dict() for gallery in self.galleries if gallery.password is None]
+        }
+        
+    def to_dict_profile_full(self):
+        return {
             'username': self.username,
             'email': self.email,
             'name': f"{self.first_name} {self.last_name}",
             'bio': self.bio,
             'profile_pic': self.profile_pic_url,
             'portfolio_pic': self.portfolio_pic_url,
-            'galleries': [gallery.to_dict() for gallery in self.galleries]
+            'galleries': [gallery.to_dict() for gallery in self.galleries] 
         }

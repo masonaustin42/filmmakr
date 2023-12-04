@@ -11,6 +11,7 @@ class Item(db.Model):
     name = db.Column(db.String(255))
     media_type = db.Column(db.String(30))
     media_url = db.Column(db.String(2000), nullable=False)
+    is_main = db.Column(db.Boolean, default=False)
     
     gallery = db.relationship("Gallery", back_populates="items")
     
@@ -20,5 +21,16 @@ class Item(db.Model):
             'id': self.id,
             'name': self.name,
             'type': self.media_type,
-            'url': self.media_url
+            'url': self.media_url,
+            'is_main': self.is_main
+        }
+        
+    def to_dict_full(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "type": self.media_type,
+            "url": self.media_url,
+            "gallery": self.gallery,
+            'is_main': self.is_main
         }

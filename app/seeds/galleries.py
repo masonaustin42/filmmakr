@@ -12,13 +12,13 @@ def seed_galleries():
         for row in csvreader:
             gallery = Gallery(
                 title = row[0],
-                date = date.fromisoformat(row[1]),
-                hashed_password = generate_password_hash(row[2]),
+                date = None if row[1] == "" else date.fromisoformat(row[1]),
+                hashed_password = None if row[2] == "" else generate_password_hash(row[2]),
                 owner_id = int(row[3]),
-                is_public = True if row[4] == "True" else False
+                preview_url = None if row[4] == "" else row[4]
             )
             db.session.add(gallery)
-            db.session.commit()
+        db.session.commit()
 
 # Uses a raw SQL query to TRUNCATE or DELETE the users table. SQLAlchemy doesn't
 # have a built in function to do this. With postgres in production TRUNCATE
