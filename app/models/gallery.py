@@ -23,7 +23,10 @@ class Gallery(db.Model):
 
     @password.setter
     def password(self, password):
-        self.hashed_password = generate_password_hash(password)
+        if password is None:
+            self.hashed_password = None
+        else :
+            self.hashed_password = generate_password_hash(password)
 
     def check_password(self, password):
         return check_password_hash(self.password, password)
@@ -41,5 +44,7 @@ class Gallery(db.Model):
             'title': self.title,
             'date': self.date,
             'items': [item.to_dict() for item in self.items],
-            'preview': self.preview_url
+            'preview': self.preview_url,
+            'isPublic': (self.hashed_password is None),
+            'ownerId': self.owner.id
         }

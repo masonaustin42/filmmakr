@@ -3,7 +3,6 @@ from app.models import User, db
 from app.forms import LoginForm
 from app.forms import SignUpForm
 from flask_login import current_user, login_user, logout_user, login_required
-from . import validation_errors_to_error_messages
 import re
 from .aws_helpers import *
 
@@ -39,7 +38,7 @@ def login():
             user = User.query.filter(User.username == form.data['credential']).first()
         login_user(user)
         return user.to_dict()
-    return {'errors': validation_errors_to_error_messages(form.errors)}, 401
+    return {'errors': form.errors}, 401
 
 
 @auth_routes.route('/logout')
