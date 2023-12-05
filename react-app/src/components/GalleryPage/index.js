@@ -6,6 +6,9 @@ import {
   useParams,
 } from "react-router-dom/cjs/react-router-dom.min";
 import { fetchGallery } from "../../store/gallery";
+import OpenModalButton from "../OpenModalButton";
+import CreateItemModal from "../CreateItemModal";
+import DeleteItemModal from "../DeleteItemModal";
 
 function Gallery() {
   const { galleryId } = useParams();
@@ -13,6 +16,7 @@ function Gallery() {
   const location = useLocation();
   const password = new URLSearchParams(location.search).get("p");
   const gallery = useSelector((state) => state.gallery);
+  const user = useSelector((state) => state.session?.user);
 
   useEffect(() => {
     dispatch(fetchGallery(galleryId, password));
@@ -69,9 +73,8 @@ function Gallery() {
             alt=""
             key={item.id}
             className={item.is_main ? "main-item" : "item image"}
-          >
-            <source src={`${item.url}`} />
-          </img>
+            src={`${item.url}`}
+          />
         );
       }
     } else {
@@ -104,13 +107,32 @@ function Gallery() {
       <div id="preview">{MatchElementToItem(preview, preview.type, true)}</div>
       <h1>{gallery.title}</h1>
       {gallery?.date && <h2>{formatDate(gallery.date)}</h2>}
+      {gallery?.ownerId === user?.id && (
+        <OpenModalButton
+          buttonText="Upload an Item"
+          modalComponent={<CreateItemModal galleryId={galleryId} />}
+        />
+      )}
       <div id="main-item-container">
         {MatchElementToItem(mainItem, mainItem.type)}
       </div>
       <div id="items-container">
         {items &&
           items.map((item) => {
-            if (!item.is_main) return MatchElementToItem(item, item.type);
+            if (!item.is_main)
+              return (
+                <div key={item.id}>
+                  {MatchElementToItem(item, item.type)}
+                  {gallery?.ownerId === user?.id && (
+                    <>
+                      <OpenModalButton
+                        buttonText="Delete"
+                        modalComponent={<DeleteItemModal itemId={item.id} />}
+                      />
+                    </>
+                  )}
+                </div>
+              );
             else return null;
           })}
       </div>

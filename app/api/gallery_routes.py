@@ -108,9 +108,10 @@ def delete_gallery(galleryId):
     if not gallery or gallery.owner_id != current_user.id:
         return { "errors": "Gallery not found"}, 404
     
-    delete_preview = remove_file_from_s3(gallery.preview_url)
-    if delete_preview is not True:
-        return delete_preview
+    if gallery.preview_url:
+        delete_preview = remove_file_from_s3(gallery.preview_url)
+        if delete_preview is not True:
+            return delete_preview
     
     for item in gallery.items:
         delete_item = remove_file_from_s3(item.media_url)
