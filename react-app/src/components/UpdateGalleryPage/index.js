@@ -1,19 +1,43 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { createGallery } from "../../store/gallery";
-import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import { updateGallery, fetchGallery } from "../../store/gallery";
+import {
+  useHistory,
+  useParams,
+} from "react-router-dom/cjs/react-router-dom.min";
+import { useModal } from "../../context/Modal";
+import LoginFormModal from "../LoginFormModal";
 
-function NewGallery() {
+function UpdateGallery() {
   const dispatch = useDispatch();
   const history = useHistory();
+  const { setModalContent } = useModal();
+  const { galleryId } = useParams();
   const user = useSelector((state) => state.session?.user);
+  const gallery = useSelector((state) => state.gallery);
   const [title, setTitle] = useState("");
   const [date, setDate] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isPublic, setIsPublic] = useState(true);
   const [preview, setPreview] = useState(null);
+  const [localPreview, setLocalPreview] = useState(null);
   const [errors, setErrors] = useState({});
+
+  useEffect(() => {
+    dispatch(fetchGallery(galleryId));
+  }, [dispatch]);
+
+  useEffect(() => {
+    setTitle(gallery.title);
+    if (gallery.date) {
+      let galleryDate = new Date(gallery.date).toISOString();
+      galleryDate = galleryDate.split("T")[0];
+      setDate(galleryDate);
+    }
+    setIsPublic(gallery.isPublic);
+    setLocalPreview(gallery.preview);
+  }, [gallery, user]);
 
   useEffect(() => {
     const errorsObj = {};
@@ -32,9 +56,11 @@ function NewGallery() {
     const formdata = new FormData();
     formdata.append("title", title);
     if (date) formdata.append("date", date);
+    else formdata.append("date", null);
     if (password && !isPublic) formdata.append("password", password);
+    else formdata.append("password", null);
     if (preview) formdata.append("preview", preview);
-    const newGallery = await dispatch(createGallery(formdata));
+    const newGallery = await dispatch(updateGallery(formdata, galleryId));
     if (newGallery?.errors) {
       setErrors({ ...errors, ...newGallery.errors });
     } else {
@@ -43,6 +69,10 @@ function NewGallery() {
       history.push(url);
     }
   };
+
+  if (!gallery) return null;
+  if (!gallery.ownerId) return null;
+  if (user?.id !== gallery.ownerId) return setModalContent(<LoginFormModal />);
 
   return (
     <div>
@@ -95,10 +125,10 @@ function NewGallery() {
           <input type="file" onChange={(e) => setPreview(e.target.files[0])} />
         </label>
 
-        <button disabled={Object.values(errors).length}>Create Gallery</button>
+        <button disabled={Object.values(errors).length}>Update Gallery</button>
       </form>
     </div>
   );
 }
 
-export default NewGallery;
+export default UpdateGallery;

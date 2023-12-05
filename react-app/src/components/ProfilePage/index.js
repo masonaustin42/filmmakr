@@ -1,11 +1,16 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProfile } from "../../store/user_profile";
-import { useParams, Link } from "react-router-dom/cjs/react-router-dom.min";
+import {
+  useParams,
+  Link,
+  useHistory,
+} from "react-router-dom/cjs/react-router-dom.min";
 import OpenModalButton from "../OpenModalButton";
 import DeleteGalleryModal from "../DeleteGalleryModal";
 
 function Profile() {
+  const history = useHistory();
   const [galleries, setGalleries] = useState([]);
   const [isCurrentUser, setIsCurrentUser] = useState(false);
   const profile = useSelector((state) => state.profile);
@@ -45,7 +50,13 @@ function Profile() {
               <Link to={`/galleries/${gallery.id}`}>{gallery.title}</Link>
               {isCurrentUser && (
                 <>
-                  <button>Edit</button>
+                  <button
+                    onClick={() =>
+                      history.push(`/galleries/${gallery.id}/update`)
+                    }
+                  >
+                    Update
+                  </button>
                   <OpenModalButton
                     modalComponent={
                       <DeleteGalleryModal galleryId={gallery.id} />

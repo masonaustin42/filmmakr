@@ -7,6 +7,7 @@ import Gallery from "./components/GalleryPage";
 import Profile from "./components/ProfilePage";
 import HomePage from "./components/HomePage";
 import NewGallery from "./components/NewGalleryPage";
+import UpdateGallery from "./components/UpdateGalleryPage";
 
 function App() {
   const dispatch = useDispatch();
@@ -26,7 +27,10 @@ function App() {
           <Route path="/galleries/new">
             <NewGallery />
           </Route>
-          <Route path="/galleries/:galleryId">
+          <Route path="/galleries/:galleryId/update">
+            <UpdateGallery />
+          </Route>
+          <Route exact path="/galleries/:galleryId">
             <Gallery />
           </Route>
           <Route path="/profiles/:profileUsername">

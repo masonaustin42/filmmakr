@@ -19,7 +19,7 @@ def delete_item(itemId):
     
     delete_media = remove_file_from_s3(item.media_url)
     
-    if delete_media != True:
+    if delete_media is not True:
         return delete_media
     
     db.session.delete(item)
