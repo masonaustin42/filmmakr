@@ -2,6 +2,7 @@ const SET_GALLERY = "gallery/SET_GALLERY";
 const PATCH_GALLERY = "gallery/PATCH_GALLERY";
 const ADD_ITEM = "gallery/ADD_ITEM";
 const REMOVE_ITEM = "gallery/REMOVE_ITEM";
+const PUT_ITEM = "gallery/PUT_ITEM";
 
 const setGallery = (gallery) => ({
   type: SET_GALLERY,
@@ -21,6 +22,11 @@ const addItem = (item) => ({
 const removeItem = (itemId) => ({
   type: REMOVE_ITEM,
   itemId,
+});
+
+const putItem = (item) => ({
+  type: PUT_ITEM,
+  payload: item,
 });
 
 export const fetchGallery = (galleryId, password) => async (dispatch) => {
@@ -91,6 +97,21 @@ export const deleteItem = (itemId) => async (dispatch) => {
   }
 };
 
+export const updateItem = (formdata, itemId) => async (dispatch) => {
+  const response = await fetch(`/api/items/${itemId}`, {
+    method: "PUT",
+    body: formdata,
+  });
+  if (response.ok) {
+    const data = await response.json();
+    if (data.errors) {
+      return data;
+    }
+    dispatch(putItem(data));
+    return data;
+  }
+};
+
 export default function galleryReducer(state = {}, action) {
   switch (action.type) {
     case SET_GALLERY:
@@ -114,6 +135,14 @@ export default function galleryReducer(state = {}, action) {
       const newState = { ...state };
       delete newState.items[parseInt(action.itemId)];
       return newState;
+    case PUT_ITEM:
+      return {
+        ...state,
+        items: {
+          ...state.items,
+          [action.payload.id]: action.payload,
+        },
+      };
     default:
       return state;
   }
