@@ -9,6 +9,7 @@ import { fetchGallery } from "../../store/gallery";
 import OpenModalButton from "../OpenModalButton";
 import CreateItemModal from "../CreateItemModal";
 import DeleteItemModal from "../DeleteItemModal";
+import UpdateItemModal from "../UpdateItemModal";
 
 function Gallery() {
   const { galleryId } = useParams();
@@ -114,7 +115,20 @@ function Gallery() {
         />
       )}
       <div id="main-item-container">
+        {mainItem.name && <p>{mainItem.name}</p>}
         {MatchElementToItem(mainItem, mainItem.type)}
+        {gallery?.ownerId === user?.id && (
+          <>
+            <OpenModalButton
+              buttonText="Delete"
+              modalComponent={<DeleteItemModal itemId={mainItem.id} />}
+            />
+            <OpenModalButton
+              buttonText="Update"
+              modalComponent={<UpdateItemModal item={mainItem} />}
+            />
+          </>
+        )}
       </div>
       <div id="items-container">
         {items &&
@@ -122,12 +136,17 @@ function Gallery() {
             if (!item.is_main)
               return (
                 <div key={item.id}>
+                  {item.name && <p>{item.name}</p>}
                   {MatchElementToItem(item, item.type)}
                   {gallery?.ownerId === user?.id && (
                     <>
                       <OpenModalButton
                         buttonText="Delete"
                         modalComponent={<DeleteItemModal itemId={item.id} />}
+                      />
+                      <OpenModalButton
+                        buttonText="Update"
+                        modalComponent={<UpdateItemModal item={item} />}
                       />
                     </>
                   )}

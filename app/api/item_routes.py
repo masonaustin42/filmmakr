@@ -44,7 +44,6 @@ def update_item(itemId):
     
     if form.validate_on_submit():
         item.name = form.data["name"]
-        print(form.data)
         
         if form.data["media"] is not None:
             delete_media = remove_file_from_s3(item.media_url)
