@@ -3,7 +3,7 @@ function HomePage() {
   return (
     <div id="home-page-container">
       <video id="home-video" muted={true} loop={true} autoPlay={true}>
-        <source src="https://d2t8ka78u48u9v.cloudfront.net/media/videographer.mp4" />
+        <source src="https://d2t8ka78u48u9v.cloudfront.net/assets/preview.mov" />
       </video>
       <div id="home-title-container">
         <h1 id="home-title">Filmmakr</h1>

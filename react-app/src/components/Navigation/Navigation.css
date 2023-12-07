@@ -1,5 +1,11 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,200;1,200&display=swap");
+
 .profile-dropdown {
   position: absolute;
+  right: 20px;
+  background-color: white;
+  padding: 10px;
+  margin: 5px 0;
 }
 
 .hidden {
@@ -7,9 +13,68 @@
 }
 
 #navbar {
-  position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   z-index: 50;
+  padding: 15px 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  transition: all 0.2s ease-in;
+}
+
+#navbar > div {
+  margin: 0 20px;
+}
+
+.navbar-home-page {
+  position: fixed;
+}
+
+.navbar-other {
+  position: sticky;
+  background-color: lightgray;
+}
+
+.navbar-home-page #navbar-home-button {
+  visibility: hidden;
+}
+
+.navbar-home-page button {
+  color: white;
+  background-color: transparent;
+}
+
+#navbar-home-button {
+  font-family: "Noto Serif";
+  font-stretch: expanded;
+  letter-spacing: 4px;
+  border: 2px solid white;
+  font-weight: 200;
+  font-size: 25px;
+  color: white;
+  text-decoration: none;
+  padding: 2px;
+}
+
+.scrolled,
+.navbar-other {
+  visibility: visible;
+  background-color: white;
+  border-bottom: 1px solid lightgray;
+  color: black;
+  transition: all 0.2s ease-in;
+}
+
+.scrolled #navbar-home-button,
+.navbar-other #navbar-home-button {
+  border-color: black;
+  color: black;
+  visibility: visible;
+}
+
+.scrolled button,
+.navbar-other button {
+  color: black;
 }

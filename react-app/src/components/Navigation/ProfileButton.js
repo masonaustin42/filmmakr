@@ -40,8 +40,8 @@ function ProfileButton({ user }) {
 
   return (
     <>
-      <button onClick={openMenu}>
-        <i className="fas fa-user-circle" />
+      <button onClick={openMenu} style={{ backgroundColor: "transparent" }}>
+        <i className="fas fa-user" style={{ fontSize: "20px" }} />
       </button>
       <ul className={ulClassName} ref={ulRef}>
         {user ? (
@@ -49,13 +49,22 @@ function ProfileButton({ user }) {
             <li>{user.username}</li>
             <li>{user.email}</li>
             <li>
-              <Link to={`/profiles/${user.username}`}>My Profile</Link>
+              <Link
+                onClick={() => setShowMenu(false)}
+                to={`/profiles/${user.username}`}
+              >
+                My Profile
+              </Link>
             </li>
             <li>
-              <Link to="/galleries/new">Create a New Gallery</Link>
+              <Link onClick={() => setShowMenu(false)} to="/galleries/new">
+                Create a New Gallery
+              </Link>
             </li>
             <li>
-              <button onClick={handleLogout}>Log Out</button>
+              <button style={{ color: "black" }} onClick={handleLogout}>
+                Log Out
+              </button>
             </li>
           </>
         ) : (
