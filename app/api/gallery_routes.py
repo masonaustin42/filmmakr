@@ -18,8 +18,9 @@ def get_gallery(galleryId):
     if not gallery:
         return { "errors": "Gallery not found"}, 404
     
-    if current_user.id == gallery.owner_id:
-        return {"gallery": gallery.to_dict_full()}
+    if current_user.is_authenticated:
+        if current_user.id == gallery.owner_id:
+            return {"gallery": gallery.to_dict_full()}
     
     if gallery.hashed_password is not None:
         if gallery.check_password(password):

@@ -8,6 +8,7 @@ import {
 } from "react-router-dom/cjs/react-router-dom.min";
 import OpenModalButton from "../OpenModalButton";
 import DeleteGalleryModal from "../DeleteGalleryModal";
+import "./profile.css";
 
 function Profile() {
   const history = useHistory();
@@ -41,9 +42,15 @@ function Profile() {
 
   return (
     <>
-      <h1>{profile.name}</h1>
-      <p>{profile.bio}</p>
-      <ul>
+      <div id="profile-header">
+        {profile.profile_pic && (
+          <img id="profile-pic" src={profile.profile_pic} alt="" />
+        )}
+        <h1>{profile.name}</h1>
+      </div>
+      <p id="bio">{profile.bio}</p>
+      <h2 id="profile-galleries-header">{profile.name}'s Galleries</h2>
+      <ul id="profile-galleries-list">
         {galleries.length &&
           galleries.map((gallery) => (
             <li key={gallery.id}>

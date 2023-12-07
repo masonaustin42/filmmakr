@@ -7,23 +7,34 @@ import { useLocation } from "react-router-dom/cjs/react-router-dom.min";
 
 function Navigation({ isLoaded }) {
   const sessionUser = useSelector((state) => state.session.user);
-  const location = useLocation();
-  console.log(location);
+  const { pathname } = useLocation();
+
+  let navBarClass;
+
+  if (pathname === "/" || pathname.split("/")[1] === "galleries") {
+    navBarClass = "navbar-home-page";
+  } else {
+    navBarClass = "navbar-other";
+  }
+
+  document.addEventListener("scroll", () => {
+    const navbar = document.querySelector("#navbar");
+    if (window.scrollY > 0) navbar.classList.add("scrolled");
+    else navbar.classList.remove("scrolled");
+  });
 
   return (
-    <nav id="navbar">
-      <ul>
-        <li>
-          <NavLink exact to="/">
-            Home
-          </NavLink>
-        </li>
-        {isLoaded && (
-          <li>
-            <ProfileButton user={sessionUser} />
-          </li>
-        )}
-      </ul>
+    <nav id="navbar" className={navBarClass}>
+      <div>
+        <NavLink exact to="/" id="navbar-home-button">
+          Filmmakr
+        </NavLink>
+      </div>
+      {isLoaded && (
+        <div>
+          <ProfileButton user={sessionUser} />
+        </div>
+      )}
     </nav>
   );
 }

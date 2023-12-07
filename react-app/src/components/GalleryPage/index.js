@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  matchPath,
   useLocation,
   useParams,
 } from "react-router-dom/cjs/react-router-dom.min";
@@ -10,6 +9,7 @@ import OpenModalButton from "../OpenModalButton";
 import CreateItemModal from "../CreateItemModal";
 import DeleteItemModal from "../DeleteItemModal";
 import UpdateItemModal from "../UpdateItemModal";
+import "./gallery.css";
 
 function Gallery() {
   const { galleryId } = useParams();
@@ -38,7 +38,9 @@ function Gallery() {
             autoPlay={true}
             muted={true}
             key={item.id}
+            loop={true}
             className="preview-item"
+            preload={true}
           >
             <source src={`${item.url}`} />
           </video>
@@ -106,8 +108,10 @@ function Gallery() {
   return (
     <>
       <div id="preview">{MatchElementToItem(preview, preview.type, true)}</div>
-      <h1>{gallery.title}</h1>
-      {gallery?.date && <h2>{formatDate(gallery.date)}</h2>}
+      <div id="gallery-title-container">
+        <h1 id="gallery-title">{gallery.title}</h1>
+        {gallery?.date && <h2 id="gallery-date">{formatDate(gallery.date)}</h2>}
+      </div>
       {gallery?.ownerId === user?.id && (
         <OpenModalButton
           buttonText="Upload an Item"
@@ -115,17 +119,17 @@ function Gallery() {
         />
       )}
       <div id="main-item-container">
-        {mainItem.name && <p>{mainItem.name}</p>}
+        {mainItem.name && <h2 id="main-item-name">{mainItem.name}</h2>}
         {MatchElementToItem(mainItem, mainItem.type)}
         {gallery?.ownerId === user?.id && (
           <>
             <OpenModalButton
-              buttonText="Delete"
-              modalComponent={<DeleteItemModal itemId={mainItem.id} />}
-            />
-            <OpenModalButton
               buttonText="Update"
               modalComponent={<UpdateItemModal item={mainItem} />}
+            />
+            <OpenModalButton
+              buttonText="Delete"
+              modalComponent={<DeleteItemModal itemId={mainItem.id} />}
             />
           </>
         )}
