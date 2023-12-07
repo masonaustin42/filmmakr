@@ -40,11 +40,23 @@ li {
 
 button {
   color: black;
-  background-color: white;
+  background-color: transparent;
   border: 0;
   padding: 4px;
+  font-size: 18px;
+  font-weight: 400;
+  transition: box-shadow 0.4s;
+  transition: color 0.2s;
+  transition: background-color 0.2s;
 }
 
 button:hover {
   cursor: pointer;
+  box-shadow: rgba(0, 0, 0, 0.12) 0px 8px 8px;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  background-color: gray;
+  color: white;
 }

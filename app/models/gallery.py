@@ -45,6 +45,6 @@ class Gallery(db.Model):
             'date': self.date,
             'items': [item.to_dict() for item in self.items],
             'preview': self.preview_url,
-            'isPublic': (self.hashed_password is None),
+            'isPrivate': (self.hashed_password is not None),
             'ownerId': self.owner.id
         }
