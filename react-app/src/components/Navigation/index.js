@@ -11,7 +11,12 @@ function Navigation({ isLoaded }) {
 
   let navBarClass;
 
-  if (pathname === "/" || pathname.split("/")[1] === "galleries") {
+  if (
+    pathname === "/" ||
+    (pathname.split("/")[1] === "galleries" &&
+      pathname.indexOf("new") === -1 &&
+      pathname.indexOf("update") === -1)
+  ) {
     navBarClass = "navbar-home-page";
   } else {
     navBarClass = "navbar-other";

@@ -1,13 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,200;1,200&display=swap");
 
-.profile-dropdown {
-  position: absolute;
-  right: 20px;
-  background-color: white;
-  padding: 10px;
-  margin: 5px 0;
-}
-
 .hidden {
   display: none;
 }
@@ -76,5 +68,17 @@
 
 .scrolled button,
 .navbar-other button {
+  color: black;
+}
+
+.profile-dropdown {
+  position: absolute;
+  right: 20px;
+  background-color: white;
+  padding: 10px;
+  margin: 5px 0;
+}
+
+.profile-dropdown button {
   color: black;
 }

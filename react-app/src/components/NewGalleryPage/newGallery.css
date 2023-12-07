@@ -1,0 +1,40 @@
+.gallery-form-header {
+  margin: 25px;
+  text-align: center;
+}
+
+#gallery-form {
+  display: flex;
+  flex-direction: column;
+  box-shadow: rgba(0, 0, 0, 0.12) 0px 8px 32px;
+  border-radius: 35px;
+  padding: 20px;
+  margin: 40px;
+}
+
+.gallery-form-label {
+  display: flex;
+  flex-direction: column;
+  margin: 8px 0;
+  font-size: 16px;
+}
+
+#gallery-form > label > input {
+  font-size: 16px;
+}
+
+#gallery-form-private {
+  display: flex;
+  margin: 8px 0;
+  font-size: 16px;
+  flex-direction: row;
+  flex-wrap: nowrap;
+}
+
+#gallery-form-private > input {
+  width: fit-content;
+}
+
+.hidden {
+  visibility: hidden;
+}

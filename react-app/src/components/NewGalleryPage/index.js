@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { createGallery } from "../../store/gallery";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import "./newGallery.css";
 
 function NewGallery() {
   const dispatch = useDispatch();
@@ -11,7 +12,7 @@ function NewGallery() {
   const [date, setDate] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [isPublic, setIsPublic] = useState(true);
+  const [isPrivate, setIsPrivate] = useState(false);
   const [preview, setPreview] = useState(null);
   const [errors, setErrors] = useState({});
 
@@ -19,12 +20,12 @@ function NewGallery() {
     const errorsObj = {};
     console.log(date, typeof date);
     if (title == "") errorsObj.title = "Title is required";
-    if (!isPublic && password == "")
+    if (isPrivate && password == "")
       errorsObj.password = "Password is required if gallery is private";
-    if (!isPublic && password !== "" && password !== confirmPassword)
+    if (isPrivate && password !== "" && password !== confirmPassword)
       errorsObj.confirmPassword = "Passwords do not match";
     setErrors(errorsObj);
-  }, [title, password, confirmPassword, isPublic]);
+  }, [title, password, confirmPassword, isPrivate]);
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -32,72 +33,81 @@ function NewGallery() {
     const formdata = new FormData();
     formdata.append("title", title);
     if (date) formdata.append("date", date);
-    if (password && !isPublic) formdata.append("password", password);
+    if (password && isPrivate) formdata.append("password", password);
     if (preview) formdata.append("preview", preview);
     const newGallery = await dispatch(createGallery(formdata));
     if (newGallery?.errors) {
       setErrors({ ...errors, ...newGallery.errors });
     } else {
       let url = `/galleries/${newGallery.id}`;
-      if (!isPublic && password !== "") url += `?p=${password}`;
+      if (isPrivate && password !== "") url += `?p=${password}`;
       history.push(url);
     }
   };
 
   return (
-    <div>
-      <h1>New Gallery</h1>
-      <form onSubmit={onSubmit} encType="multipart/formdata">
-        <label>
+    <>
+      <form id="gallery-form" onSubmit={onSubmit} encType="multipart/formdata">
+        <h1 className="gallery-form-header">New Gallery</h1>
+        <label className="gallery-form-label">
           Title
           <input
             type="text"
+            placeholder="Title"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
           />
         </label>
-        <label>
+        <label className="gallery-form-label">
           Date
           <input
             type="date"
             value={date}
             onChange={(e) => setDate(e.target.value)}
           />
+          <button type="button" onClick={() => setDate("")}>
+            Remove Date
+          </button>
         </label>
-        <button onClick={() => setDate("")}>Remove Date</button>
-        <label>
-          Public
+        <label id="gallery-form-private">
+          Set Gallery to Private?
           <input
             type="checkbox"
-            value={isPublic}
-            onChange={() => setIsPublic(!isPublic)}
+            value={isPrivate}
+            onChange={() => setIsPrivate(!isPrivate)}
           />
         </label>
-        <label hidden={isPublic}>
-          Password
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </label>
-        <label hidden={isPublic}>
-          Confirm Password
-          <input
-            type="password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-          />
-        </label>
+        {isPrivate && (
+          <>
+            <label className="gallery-form-label">
+              Password
+              <input
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </label>
+            <label className="gallery-form-label">
+              Confirm Password
+              <input
+                type="password"
+                placeholder="Confirm Password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+              />
+            </label>
+          </>
+        )}
 
-        <label>
-          Preview
+        <label className="gallery-form-label">
+          Preview Media (Image or Video File)
           <input type="file" onChange={(e) => setPreview(e.target.files[0])} />
         </label>
 
         <button disabled={Object.values(errors).length}>Create Gallery</button>
       </form>
-    </div>
+    </>
   );
 }
 

@@ -7,6 +7,7 @@ import {
 } from "react-router-dom/cjs/react-router-dom.min";
 import { useModal } from "../../context/Modal";
 import LoginFormModal from "../LoginFormModal";
+import "./updateGallery.css";
 
 function UpdateGallery() {
   const dispatch = useDispatch();
@@ -19,7 +20,7 @@ function UpdateGallery() {
   const [date, setDate] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [isPublic, setIsPublic] = useState(true);
+  const [isPrivate, setIsPrivate] = useState(false);
   const [preview, setPreview] = useState(null);
   const [localPreview, setLocalPreview] = useState(null);
   const [errors, setErrors] = useState({});
@@ -35,7 +36,7 @@ function UpdateGallery() {
       galleryDate = galleryDate.split("T")[0];
       setDate(galleryDate);
     }
-    setIsPublic(gallery.isPublic);
+    setIsPrivate(gallery.isPrivate);
     setLocalPreview(gallery.preview);
   }, [gallery, user]);
 
@@ -43,12 +44,12 @@ function UpdateGallery() {
     const errorsObj = {};
     console.log(date, typeof date);
     if (title == "") errorsObj.title = "Title is required";
-    if (!isPublic && password == "")
+    if (isPrivate && password == "")
       errorsObj.password = "Password is required if gallery is private";
-    if (!isPublic && password !== "" && password !== confirmPassword)
+    if (isPrivate && password !== "" && password !== confirmPassword)
       errorsObj.confirmPassword = "Passwords do not match";
     setErrors(errorsObj);
-  }, [title, password, confirmPassword, isPublic]);
+  }, [title, password, confirmPassword, isPrivate]);
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -57,7 +58,7 @@ function UpdateGallery() {
     formdata.append("title", title);
     if (date) formdata.append("date", date);
     else formdata.append("date", null);
-    if (password && !isPublic) formdata.append("password", password);
+    if (password && isPrivate) formdata.append("password", password);
     else formdata.append("password", null);
     if (preview) formdata.append("preview", preview);
     const newGallery = await dispatch(updateGallery(formdata, galleryId));
@@ -65,7 +66,7 @@ function UpdateGallery() {
       setErrors({ ...errors, ...newGallery.errors });
     } else {
       let url = `/galleries/${newGallery.id}`;
-      if (!isPublic && password !== "") url += `?p=${password}`;
+      if (isPrivate && password !== "") url += `?p=${password}`;
       history.push(url);
     }
   };
@@ -75,59 +76,61 @@ function UpdateGallery() {
   if (user?.id !== gallery.ownerId) return setModalContent(<LoginFormModal />);
 
   return (
-    <div>
-      <h1>New Gallery</h1>
-      <form onSubmit={onSubmit} encType="multipart/formdata">
-        <label>
-          Title
-          <input
-            type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-          />
-        </label>
-        <label>
-          Date
-          <input
-            type="date"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-          />
-        </label>
-        <button onClick={() => setDate("")}>Remove Date</button>
-        <label>
-          Public
-          <input
-            type="checkbox"
-            value={isPublic}
-            onChange={() => setIsPublic(!isPublic)}
-          />
-        </label>
-        <label hidden={isPublic}>
-          Password
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </label>
-        <label hidden={isPublic}>
-          Confirm Password
-          <input
-            type="password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-          />
-        </label>
+    <form id="gallery-form" onSubmit={onSubmit} encType="multipart/formdata">
+      <h1 className="gallery-form-header">Update Gallery</h1>
+      <label className="gallery-form-label">
+        Title
+        <input
+          type="text"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
+      </label>
+      <label className="gallery-form-label">
+        Date
+        <input
+          type="date"
+          value={date}
+          onChange={(e) => setDate(e.target.value)}
+        />
+      </label>
+      <button onClick={() => setDate("")}>Remove Date</button>
+      <label id="gallery-form-private">
+        Private
+        <input
+          type="checkbox"
+          value={isPrivate}
+          onChange={() => setIsPrivate(!isPrivate)}
+        />
+      </label>
+      {isPrivate && (
+        <>
+          <label className="gallery-form-label">
+            Password
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </label>
+          <label className="gallery-form-label">
+            Confirm Password
+            <input
+              type="password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+            />
+          </label>
+        </>
+      )}
 
-        <label>
-          Preview
-          <input type="file" onChange={(e) => setPreview(e.target.files[0])} />
-        </label>
+      <label className="gallery-form-label">
+        Preview
+        <input type="file" onChange={(e) => setPreview(e.target.files[0])} />
+      </label>
 
-        <button disabled={Object.values(errors).length}>Update Gallery</button>
-      </form>
-    </div>
+      <button disabled={Object.values(errors).length}>Update Gallery</button>
+    </form>
   );
 }
 
