@@ -35,12 +35,15 @@ function Gallery() {
       if (isPreview) {
         return (
           <video
+            key={item.id}
+            className="preview-item"
             autoPlay={true}
             muted={true}
-            key={item.id}
             loop={true}
-            className="preview-item"
-            preload={true}
+            preload=""
+            playsInline={true}
+            disablePictureInPicture={true}
+            disableRemotePlayback={true}
           >
             <source src={`${item.url}`} />
           </video>
@@ -66,10 +69,11 @@ function Gallery() {
         </audio>
       );
     } else if (IMAGE_TYPES.includes(type)) {
+      console.log("is image");
       if (isPreview) {
-        <img alt="" key={item.id} className="preview-item">
-          <source src={`${item.url}`} />
-        </img>;
+        return (
+          <img alt="" key={item.id} className="preview-item" src={item.url} />
+        );
       } else {
         return (
           <img
@@ -100,6 +104,7 @@ function Gallery() {
     : {};
 
   console.log("PREVIEW:, ", preview);
+  console.log("PREVIEW TYPE", preview.type);
 
   const VIDEO_TYPES = ["mp4", "mov", "avi", "mpeg"];
   const AUDIO_TYPES = ["mp3", "aiff", "wmv", "wav", "flac"];
@@ -118,22 +123,25 @@ function Gallery() {
           modalComponent={<CreateItemModal galleryId={galleryId} />}
         />
       )}
-      <div id="main-item-container">
-        {mainItem.name && <h2 id="main-item-name">{mainItem.name}</h2>}
-        {MatchElementToItem(mainItem, mainItem.type)}
-        {gallery?.ownerId === user?.id && (
-          <>
-            <OpenModalButton
-              buttonText="Update"
-              modalComponent={<UpdateItemModal item={mainItem} />}
-            />
-            <OpenModalButton
-              buttonText="Delete"
-              modalComponent={<DeleteItemModal itemId={mainItem.id} />}
-            />
-          </>
-        )}
-      </div>
+      {mainItem?.url ? (
+        <div id="main-item-container">
+          {mainItem.name && <h2 id="main-item-name">{mainItem.name}</h2>}
+          {MatchElementToItem(mainItem, mainItem.type)}
+          {gallery?.ownerId === user?.id && (
+            <>
+              <OpenModalButton
+                buttonText="Update"
+                modalComponent={<UpdateItemModal item={mainItem} />}
+              />
+              <OpenModalButton
+                buttonText="Delete"
+                modalComponent={<DeleteItemModal itemId={mainItem.id} />}
+              />
+            </>
+          )}
+        </div>
+      ) : null}
+
       <div id="items-container">
         {items &&
           items.map((item) => {

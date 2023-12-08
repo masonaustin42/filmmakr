@@ -8,7 +8,7 @@
   top: 0;
   left: 0;
   width: 100%;
-  z-index: 50;
+  z-index: 10;
   padding: 15px 0;
   display: flex;
   flex-direction: row;
@@ -29,10 +29,6 @@
   background-color: lightgray;
 }
 
-.navbar-home-page #navbar-home-button {
-  visibility: hidden;
-}
-
 .navbar-home-page button {
   color: white;
   background-color: transparent;
@@ -48,6 +44,13 @@
   color: white;
   text-decoration: none;
   padding: 2px;
+}
+
+.navbar-hide-button #navbar-home-button {
+  visibility: hidden;
+  color: transparent;
+  background-color: transparent;
+  border-color: transparent;
 }
 
 .scrolled,

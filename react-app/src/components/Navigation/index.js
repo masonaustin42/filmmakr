@@ -11,11 +11,12 @@ function Navigation({ isLoaded }) {
 
   let navBarClass;
 
-  if (
-    pathname === "/" ||
-    (pathname.split("/")[1] === "galleries" &&
-      pathname.indexOf("new") === -1 &&
-      pathname.indexOf("update") === -1)
+  if (pathname === "/") {
+    navBarClass = "navbar-home-page navbar-hide-button";
+  } else if (
+    pathname.split("/")[1] === "galleries" &&
+    pathname.indexOf("new") === -1 &&
+    pathname.indexOf("update") === -1
   ) {
     navBarClass = "navbar-home-page";
   } else {
@@ -31,9 +32,15 @@ function Navigation({ isLoaded }) {
   return (
     <nav id="navbar" className={navBarClass}>
       <div>
-        <NavLink exact to="/" id="navbar-home-button">
-          Filmmakr
-        </NavLink>
+        {pathname === "/" ? (
+          <a id="navbar-home-button" href="#top">
+            Filmmakr
+          </a>
+        ) : (
+          <NavLink exact to="/" id="navbar-home-button">
+            Filmmakr
+          </NavLink>
+        )}
       </div>
       {isLoaded && (
         <div>

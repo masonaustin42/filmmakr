@@ -49,15 +49,12 @@ function ProfileButton({ user }) {
             <li>{user.username}</li>
             <li>{user.email}</li>
             <li>
-              <Link
-                onClick={() => setShowMenu(false)}
-                to={`/profiles/${user.username}`}
-              >
+              <Link onClick={closeMenu} to={`/profiles/${user.username}`}>
                 My Profile
               </Link>
             </li>
             <li>
-              <Link onClick={() => setShowMenu(false)} to="/galleries/new">
+              <Link onClick={closeMenu} to="/galleries/new">
                 Create a New Gallery
               </Link>
             </li>
@@ -72,14 +69,14 @@ function ProfileButton({ user }) {
             <li>
               <OpenModalButton
                 buttonText="Log In"
-                onItemClick={closeMenu}
+                onItemClick={() => setShowMenu(false)}
                 modalComponent={<LoginFormModal />}
               />
             </li>
             <li>
               <OpenModalButton
                 buttonText="Sign Up"
-                onItemClick={closeMenu}
+                onItemClick={() => setShowMenu(false)}
                 modalComponent={<SignupFormModal />}
               />
             </li>

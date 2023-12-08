@@ -2,7 +2,16 @@ import "./HomePage.css";
 function HomePage() {
   return (
     <div id="home-page-container">
-      <video id="home-video" muted={true} loop={true} autoPlay={true}>
+      <video
+        id="home-video"
+        autoPlay={true}
+        muted={true}
+        loop={true}
+        preload=""
+        playsInline={true}
+        disablePictureInPicture={true}
+        disableRemotePlayback={true}
+      >
         <source src="https://d2t8ka78u48u9v.cloudfront.net/assets/preview.mov" />
       </video>
       <div id="home-title-container">

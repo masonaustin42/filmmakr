@@ -14,14 +14,16 @@ function NewGallery() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isPrivate, setIsPrivate] = useState(false);
   const [preview, setPreview] = useState(null);
+  const [localPreview, setLocalPreview] = useState(null);
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
     const errorsObj = {};
-    console.log(date, typeof date);
     if (title == "") errorsObj.title = "Title is required";
-    if (isPrivate && password == "")
+    if (isPrivate && password === "")
       errorsObj.password = "Password is required if gallery is private";
+    if (isPrivate && confirmPassword === "")
+      errorsObj.confirmPassword = "Password is required if gallery is private";
     if (isPrivate && password !== "" && password !== confirmPassword)
       errorsObj.confirmPassword = "Passwords do not match";
     setErrors(errorsObj);
@@ -45,6 +47,13 @@ function NewGallery() {
     }
   };
 
+  const onImageChange = (e) => {
+    if (e.target.files[0]) {
+      setPreview(e.target.files[0]);
+      setLocalPreview(URL.createObjectURL(e.target.files[0]));
+    }
+  };
+
   return (
     <>
       <form id="gallery-form" onSubmit={onSubmit} encType="multipart/formdata">
@@ -56,19 +65,24 @@ function NewGallery() {
             placeholder="Title"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
+            required
+            className={errors.title ? "form-bad" : "form-good"}
           />
         </label>
+        <p className="error">{errors.title}</p>
         <label className="gallery-form-label">
           Date
           <input
             type="date"
             value={date}
             onChange={(e) => setDate(e.target.value)}
+            className={errors.date ? "form-bad" : "form-good"}
           />
           <button type="button" onClick={() => setDate("")}>
             Remove Date
           </button>
         </label>
+        <p className="error">{errors.date}</p>
         <label id="gallery-form-private">
           Set Gallery to Private?
           <input
@@ -86,8 +100,11 @@ function NewGallery() {
                 placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                required
+                className={errors.password ? "form-bad" : "form-good"}
               />
             </label>
+            <p className="error">{errors.password}</p>
             <label className="gallery-form-label">
               Confirm Password
               <input
@@ -95,14 +112,24 @@ function NewGallery() {
                 placeholder="Confirm Password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
+                required
+                className={errors.confirmPassword ? "form-bad" : "form-good"}
               />
             </label>
+
+            <p className="error">{errors.confirmPassword}</p>
           </>
         )}
-
+        {localPreview && (
+          <img
+            src={localPreview}
+            alt=""
+            style={{ width: "100px", height: "100px", objectFit: "cover" }}
+          />
+        )}
         <label className="gallery-form-label">
           Preview Media (Image or Video File)
-          <input type="file" onChange={(e) => setPreview(e.target.files[0])} />
+          <input type="file" onChange={onImageChange} />
         </label>
 
         <button disabled={Object.values(errors).length}>Create Gallery</button>
