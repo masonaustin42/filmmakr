@@ -23,6 +23,12 @@ function Gallery() {
     dispatch(fetchGallery(galleryId, password));
   }, [dispatch, galleryId, password]);
 
+  useEffect(() => {
+    if (!gallery?.preview)
+      document.querySelector("#navbar").classList.add("no-preview");
+    else document.querySelector("#navbar").classList.remove("no-preview");
+  }, [gallery]);
+
   const formatDate = (datestring) => {
     const date = new Date(datestring);
     return `${date.getUTCDate()}/${
@@ -112,10 +118,32 @@ function Gallery() {
 
   return (
     <>
-      <div id="preview">{MatchElementToItem(preview, preview.type, true)}</div>
-      <div id="gallery-title-container">
-        <h1 id="gallery-title">{gallery.title}</h1>
-        {gallery?.date && <h2 id="gallery-date">{formatDate(gallery.date)}</h2>}
+      {Object.keys(preview).length ? (
+        <div id="preview">
+          {MatchElementToItem(preview, preview.type, true)}
+        </div>
+      ) : null}
+
+      <div
+        id="gallery-title-container"
+        className={
+          Object.keys(preview).length ? "big-container" : "small-container"
+        }
+      >
+        <h1
+          id="gallery-title"
+          className={Object.keys(preview).length ? "big" : "small"}
+        >
+          {gallery.title}
+        </h1>
+        {gallery?.date && (
+          <h2
+            id="gallery-date"
+            className={Object.keys(preview).length ? "big" : "small"}
+          >
+            {formatDate(gallery.date)}
+          </h2>
+        )}
       </div>
       {gallery?.ownerId === user?.id && (
         <OpenModalButton

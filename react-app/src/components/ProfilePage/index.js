@@ -75,14 +75,12 @@ function Profile() {
             </li>
           ))
         ) : (
-          <>
-            <p>{profile.name} has not created any galleries yet.</p>
-            {isCurrentUser ? (
-              <Link to="/galleries/new">Create a New Gallery</Link>
-            ) : null}
-          </>
+          <p>{profile.name} has not created any galleries yet.</p>
         )}
       </ul>
+      {isCurrentUser ? (
+        <Link to="/galleries/new">Create a New Gallery</Link>
+      ) : null}
     </>
   );
 }

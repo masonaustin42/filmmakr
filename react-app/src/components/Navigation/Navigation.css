@@ -53,6 +53,7 @@
   border-color: transparent;
 }
 
+.no-preview,
 .scrolled,
 .navbar-other {
   visibility: visible;
@@ -62,6 +63,7 @@
   transition: all 0.2s ease-in;
 }
 
+.no-preview #navbar-home-button,
 .scrolled #navbar-home-button,
 .navbar-other #navbar-home-button {
   border-color: black;
@@ -69,6 +71,7 @@
   visibility: visible;
 }
 
+.no-preview button,
 .scrolled button,
 .navbar-other button {
   color: black;
