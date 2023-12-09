@@ -2,7 +2,7 @@ import { useDispatch } from "react-redux";
 import { useModal } from "../../context/Modal";
 import { deleteItem } from "../../store/gallery";
 
-function DeleteItemModal({ itemId }) {
+function DeleteItemModal({ itemId, isMain }) {
   const { closeModal } = useModal();
   const dispatch = useDispatch();
   return (
@@ -11,7 +11,7 @@ function DeleteItemModal({ itemId }) {
       <button onClick={() => closeModal()}>No (go back)</button>
       <button
         onClick={async () => {
-          await dispatch(deleteItem(itemId)).then(() => closeModal());
+          await dispatch(deleteItem(itemId, isMain)).then(() => closeModal());
         }}
       >
         Yes (delete item)

@@ -135,7 +135,9 @@ function Gallery() {
               />
               <OpenModalButton
                 buttonText="Delete"
-                modalComponent={<DeleteItemModal itemId={mainItem.id} />}
+                modalComponent={
+                  <DeleteItemModal itemId={mainItem.id} isMain={true} />
+                }
               />
             </>
           )}
@@ -154,7 +156,9 @@ function Gallery() {
                     <>
                       <OpenModalButton
                         buttonText="Delete"
-                        modalComponent={<DeleteItemModal itemId={item.id} />}
+                        modalComponent={
+                          <DeleteItemModal itemId={item.id} isMain={false} />
+                        }
                       />
                       <OpenModalButton
                         buttonText="Update"

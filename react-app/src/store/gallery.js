@@ -19,9 +19,10 @@ const addItem = (item) => ({
   payload: item,
 });
 
-const removeItem = (itemId) => ({
+const removeItem = (itemId, isMain) => ({
   type: REMOVE_ITEM,
   itemId,
+  isMain,
 });
 
 const putItem = (item) => ({
@@ -83,7 +84,7 @@ export const uploadItem = (formdata, galleryId) => async (dispatch) => {
   }
 };
 
-export const deleteItem = (itemId) => async (dispatch) => {
+export const deleteItem = (itemId, isMain) => async (dispatch) => {
   const response = await fetch(`/api/items/${itemId}`, {
     method: "DELETE",
   });
@@ -92,7 +93,7 @@ export const deleteItem = (itemId) => async (dispatch) => {
     if (data.errors) {
       return data;
     }
-    dispatch(removeItem(itemId));
+    dispatch(removeItem(itemId, isMain));
     return data;
   }
 };
@@ -147,7 +148,11 @@ export default function galleryReducer(state = {}, action) {
 
     case REMOVE_ITEM:
       const newState = { ...state };
-      delete newState.items[parseInt(action.itemId)];
+      if (action.isMain) {
+        delete newState.items.main;
+      } else {
+        delete newState.items[parseInt(action.itemId)];
+      }
       return newState;
     case PUT_ITEM:
       return {
