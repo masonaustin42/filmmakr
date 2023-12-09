@@ -151,6 +151,12 @@ def post_item(galleryId):
             gallery_id = galleryId
         )
         
+        if form.data["is_main"]:
+            print("IS MAIN: ", form.data["is_main"])
+            for galleryItem in gallery.items:
+                galleryItem.is_main = False
+            item.is_main = True
+        
         db.session.add(item)
         db.session.commit()
         

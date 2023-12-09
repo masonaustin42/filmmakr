@@ -68,6 +68,8 @@
 
 .main-item {
   width: 100%;
+  max-height: 90vh;
+  object-fit: contain;
 }
 
 #main-item-name {

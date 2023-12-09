@@ -127,10 +127,24 @@ export default function galleryReducer(state = {}, action) {
     case PATCH_GALLERY:
       return { ...state, ...action.payload };
     case ADD_ITEM:
-      return {
-        ...state,
-        items: { ...state.items, [action.payload.id]: action.payload },
-      };
+      if (action.payload.is_main) {
+        const newState = { ...state };
+        for (let key in newState.items) {
+          newState.items[key].is_main = false;
+        }
+        if (newState.items.main) {
+          const notMainItem = newState.items.main;
+          newState.items[notMainItem.id] = notMainItem;
+        }
+        newState.items.main = action.payload;
+        return newState;
+      } else {
+        return {
+          ...state,
+          items: { ...state.items, [action.payload.id]: action.payload },
+        };
+      }
+
     case REMOVE_ITEM:
       const newState = { ...state };
       delete newState.items[parseInt(action.itemId)];
