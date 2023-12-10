@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   useLocation,
@@ -9,18 +9,23 @@ import OpenModalButton from "../OpenModalButton";
 import CreateItemModal from "../CreateItemModal";
 import DeleteItemModal from "../DeleteItemModal";
 import UpdateItemModal from "../UpdateItemModal";
+import GalleryPassword from "../GalleryPassword";
 import "./gallery.css";
 
 function Gallery() {
   const { galleryId } = useParams();
   const dispatch = useDispatch();
   const location = useLocation();
+  const [passwordRequired, setPasswordRequired] = useState(false);
   const password = new URLSearchParams(location.search).get("p");
   const gallery = useSelector((state) => state.gallery);
   const user = useSelector((state) => state.session?.user);
 
   useEffect(() => {
-    dispatch(fetchGallery(galleryId, password));
+    (async () => {
+      const getGallery = await dispatch(fetchGallery(galleryId, password));
+      if (getGallery?.errors) setPasswordRequired(true);
+    })();
   }, [dispatch, galleryId, password]);
 
   useEffect(() => {
@@ -94,7 +99,9 @@ function Gallery() {
       return null;
     }
   };
-
+  console.log(location);
+  if (passwordRequired)
+    return <GalleryPassword location={location} reset={setPasswordRequired} />;
   if (!gallery) return null;
 
   const mainItem = gallery.items?.main || {};

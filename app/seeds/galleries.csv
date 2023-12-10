@@ -1,5 +1,3 @@
 title,date(iso_format),password,owner_id,preview
-"Demo Gallery","2023-11-29",,1,
-"Demo with Password",,password,1,
-"The Binghams","2023-08-04",,4,"https://d2t8ka78u48u9v.cloudfront.net/seeders/binghams-5.MP4"
-"Nesting Club",,,4,
+"The Binghams","2023-08-04","password",1,"https://d2t8ka78u48u9v.cloudfront.net/seeders/binghams-5.MP4"
+"Nesting Club",,,1,

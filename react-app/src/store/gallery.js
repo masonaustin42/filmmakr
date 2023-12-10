@@ -36,10 +36,13 @@ export const fetchGallery = (galleryId, password) => async (dispatch) => {
   );
   if (response.ok) {
     const data = await response.json();
+    console.log(data, "DATA");
     if (data.errors) {
       return data;
     }
     dispatch(setGallery(data.gallery));
+  } else {
+    return await response.json();
   }
 };
 
@@ -155,12 +158,21 @@ export default function galleryReducer(state = {}, action) {
       }
       return newState;
     case PUT_ITEM:
+      const updatedItems = { ...state.items };
+      if (updatedItems.main) {
+        updatedItems[updatedItems.main.id] = updatedItems.main;
+        updatedItems[updatedItems.main.id].is_main = false;
+        delete updatedItems.main;
+      }
+      updatedItems[action.payload.id] = action.payload;
+      let main = Object.values(updatedItems).find((item) => item.is_main);
+      if (main) {
+        updatedItems.main = main;
+        delete updatedItems[main.id];
+      }
       return {
         ...state,
-        items: {
-          ...state.items,
-          [action.payload.id]: action.payload,
-        },
+        items: updatedItems,
       };
     default:
       return state;

@@ -55,6 +55,17 @@ function LoginFormModal() {
         <p className="error">{errors.password}</p>
         <button type="submit">Log In</button>
       </form>
+      <button
+        onClick={(e) => {
+          e.preventDefault();
+          dispatch(login("hallie@aa.io", "passwordHallie")).then(() => {
+            closeModal();
+            history.push("/profiles/hallieaustinvideo");
+          });
+        }}
+      >
+        Log In as Demo User
+      </button>
     </>
   );
 }

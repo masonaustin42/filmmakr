@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, session, request
-from app.models import Item, db
+from app.models import Gallery, Item, db
 from flask_login import current_user, login_required
 from app.forms import UpdateItemForm
 from .aws_helpers import *
@@ -56,6 +56,14 @@ def update_item(itemId):
                 return upload, 500
             item.media_url = f"{CLOUDFRONT_URL}/{media.filename}"
             item.media_type = media.filename.rsplit(".", 1)[1].lower()
+            
+        if form.data["is_main"]:
+            gallery = Gallery.query.get(item.gallery_id)
+            for galleryItem in gallery.items:
+                galleryItem.is_main = False
+            item.is_main = True
+        else:
+            item.is_main = False
                 
         db.session.commit()
                 

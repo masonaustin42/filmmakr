@@ -1,6 +1,5 @@
 from flask import Blueprint, jsonify, session, request
 from app.models import Gallery, Item, db
-from . import validation_errors_to_error_messages
 from flask_login import current_user, login_required
 from app.forms import GalleryForm, ItemForm
 from .aws_helpers import *
@@ -152,7 +151,6 @@ def post_item(galleryId):
         )
         
         if form.data["is_main"]:
-            print("IS MAIN: ", form.data["is_main"])
             for galleryItem in gallery.items:
                 galleryItem.is_main = False
             item.is_main = True
