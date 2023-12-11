@@ -66,6 +66,9 @@
   font-size: 14px;
 }
 
+.req {
+  color: red;
+}
 .form-bad {
   box-shadow: rgba(255, 0, 0, 0.5) 0 0 8px;
   border: 1px solid rgb(255, 0, 0, 0.5);

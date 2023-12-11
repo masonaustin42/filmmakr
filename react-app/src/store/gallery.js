@@ -36,7 +36,6 @@ export const fetchGallery = (galleryId, password) => async (dispatch) => {
   );
   if (response.ok) {
     const data = await response.json();
-    console.log(data, "DATA");
     if (data.errors) {
       return data;
     }

@@ -1,7 +1,7 @@
 import { useDispatch } from "react-redux";
 import { updateItem } from "../../store/gallery";
 import { useModal } from "../../context/Modal";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 function UpdateItemModal({ item }) {
   const dispatch = useDispatch();
@@ -10,19 +10,9 @@ function UpdateItemModal({ item }) {
   const [isMain, setIsMain] = useState(item.is_main);
   const [file, setFile] = useState(null);
   const [localFile, setLocalFile] = useState(item.url);
-  const [localFileType, setLocalFileType] = useState(item.type);
+  // const [localFileType, setLocalFileType] = useState(item.type);
+  const localFileType = item.type;
   const [errors, setErrors] = useState({});
-
-  // useEffect(() => {
-  //   const errorsObj = {};
-  //   if (!name && !file) {
-  //     errorsObj.name = "";
-  //   }
-
-  //   setErrors(errorsObj);
-  // }, [name, file]);
-
-  console.log("ITEM", item);
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -103,7 +93,10 @@ function UpdateItemModal({ item }) {
 
         {localFile && MatchElementToItem(file, localFile)}
         <label>
-          File
+          <span>
+            File
+            <span className="req">*</span>
+          </span>
           <input type="file" onChange={onFileChange} />
         </label>
         <p className="error">{errors.file}</p>
@@ -130,6 +123,11 @@ function UpdateItemModal({ item }) {
             No
           </label>
         </div>
+
+        <p>
+          <span className="req">*</span> indicates required fields
+        </p>
+
         <button>Update Item</button>
       </form>
     </>

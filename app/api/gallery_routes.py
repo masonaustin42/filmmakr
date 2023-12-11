@@ -80,8 +80,14 @@ def update_gallery(galleryId):
     
     if form.validate_on_submit():
         gallery.title = form.data["title"]
-        gallery.date = form.data["date"]
-        gallery.password = form.data["password"]
+        if form.data["date"]:
+            gallery.date = form.data["date"]
+        elif form.data["remove_date"]:
+            gallery.date = None
+        if form.data["password"]:
+            gallery.password = form.data["password"]
+        elif form.data["remove_password"]:
+            gallery.password = None
         if form.data["preview"]:
             preview = form.data["preview"]
             preview.filename = get_unique_filename(preview.filename)

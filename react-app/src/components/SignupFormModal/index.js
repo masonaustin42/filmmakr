@@ -71,7 +71,10 @@ function SignupFormModal() {
       <h1>Sign Up</h1>
       <form onSubmit={handleSubmit}>
         <label>
-          Email
+          <span>
+            Email
+            <span className="req">*</span>
+          </span>
           <input
             type="text"
             value={email}
@@ -83,7 +86,10 @@ function SignupFormModal() {
         </label>
         <p className="error">{errors.email}</p>
         <label>
-          Username
+          <span>
+            Username
+            <span className="req">*</span>
+          </span>
           <input
             type="text"
             value={username}
@@ -95,7 +101,10 @@ function SignupFormModal() {
         </label>
         <p className="error">{errors.username}</p>
         <label>
-          First Name
+          <span>
+            First Name
+            <span className="req">*</span>
+          </span>
           <input
             type="text"
             value={firstName}
@@ -107,7 +116,10 @@ function SignupFormModal() {
         </label>
         <p className="error">{errors.firstName}</p>
         <label>
-          Last Name
+          <span>
+            Last Name
+            <span className="req">*</span>
+          </span>
           <input
             type="text"
             value={lastName}
@@ -119,7 +131,10 @@ function SignupFormModal() {
         </label>
         <p className="error">{errors.lastName}</p>
         <label>
-          Password
+          <span>
+            Password
+            <span className="req">*</span>
+          </span>
           <input
             type="password"
             value={password}
@@ -131,7 +146,10 @@ function SignupFormModal() {
         </label>
         <p className="error">{errors.password}</p>
         <label>
-          Confirm Password
+          <span>
+            Confirm Password
+            <span className="req">*</span>
+          </span>
           <input
             type="password"
             value={confirmPassword}
@@ -158,6 +176,11 @@ function SignupFormModal() {
           <input type="file" onChange={profilePicChange} />
         </label>
         <p className="error">{errors.profilePic}</p>
+
+        <p>
+          <span className="req">*</span> indicates required fields
+        </p>
+
         <button type="submit" disabled={Object.values(errors).length}>
           Sign Up
         </button>

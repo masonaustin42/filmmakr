@@ -80,7 +80,6 @@ function Gallery() {
         </audio>
       );
     } else if (IMAGE_TYPES.includes(type)) {
-      console.log("is image");
       if (isPreview) {
         return (
           <img alt="" key={item.id} className="preview-item" src={item.url} />
@@ -99,7 +98,6 @@ function Gallery() {
       return null;
     }
   };
-  console.log(location);
   if (passwordRequired)
     return <GalleryPassword location={location} reset={setPasswordRequired} />;
   if (!gallery) return null;
@@ -115,9 +113,6 @@ function Gallery() {
           [gallery.preview.split(".").length - 1].toLowerCase(),
       }
     : {};
-
-  console.log("PREVIEW:, ", preview);
-  console.log("PREVIEW TYPE", preview.type);
 
   const VIDEO_TYPES = ["mp4", "mov", "avi", "mpeg"];
   const AUDIO_TYPES = ["mp3", "aiff", "wmv", "wav", "flac"];

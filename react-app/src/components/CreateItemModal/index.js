@@ -82,7 +82,7 @@ function CreateItemModal({ galleryId }) {
       <h2>Upload an Item</h2>
       <form onSubmit={onSubmit} encType="multipart/formdata">
         <label>
-          Name (optional)
+          Name
           <input
             type="text"
             value={name}
@@ -95,7 +95,10 @@ function CreateItemModal({ galleryId }) {
 
         {localFile && MatchElementToItem(file, localFile)}
         <label>
-          File
+          <span>
+            File
+            <span className="req">*</span>
+          </span>
           <input type="file" onChange={onFileChange} />
         </label>
         <p className="error">{errors.file}</p>
@@ -122,6 +125,11 @@ function CreateItemModal({ galleryId }) {
             No
           </label>
         </div>
+
+        <p>
+          <span className="req">*</span> indicates required fields
+        </p>
+
         <button disabled={Object.keys(errors).length}>Upload Item</button>
       </form>
     </>
