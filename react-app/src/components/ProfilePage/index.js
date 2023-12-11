@@ -51,7 +51,7 @@ function Profile() {
       <p id="bio">{profile.bio}</p>
       <h2 id="profile-galleries-header">{profile.name}'s Galleries</h2>
       <ul id="profile-galleries-list">
-        {galleries.length &&
+        {galleries.length ? (
           galleries.map((gallery) => (
             <li key={gallery.id}>
               <Link to={`/galleries/${gallery.id}`}>{gallery.title}</Link>
@@ -73,8 +73,14 @@ function Profile() {
                 </>
               )}
             </li>
-          ))}
+          ))
+        ) : (
+          <p>{profile.name} has not created any galleries yet.</p>
+        )}
       </ul>
+      {isCurrentUser ? (
+        <Link to="/galleries/new">Create a New Gallery</Link>
+      ) : null}
     </>
   );
 }

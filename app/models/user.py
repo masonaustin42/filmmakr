@@ -17,9 +17,8 @@ class User(db.Model, UserMixin):
     last_name = db.Column(db.String(255), nullable=False)
     bio = db.Column(db.String(1500))
     profile_pic_url = db.Column(db.String(1500))
-    portfolio_pic_url = db.Column(db.String(1500))
     
-    galleries = db.relationship('Gallery', back_populates='owner') # maybe add cascade='all, delete-orphan'
+    galleries = db.relationship('Gallery', back_populates='owner', cascade='all, delete-orphan')
     
 
     @property
@@ -48,7 +47,6 @@ class User(db.Model, UserMixin):
             'name': f"{self.first_name} {self.last_name}",
             'bio': self.bio,
             'profile_pic': self.profile_pic_url,
-            'portfolio_pic': self.portfolio_pic_url,
             'galleries': [gallery.to_dict() for gallery in self.galleries if gallery.password is None]
         }
         
@@ -59,6 +57,5 @@ class User(db.Model, UserMixin):
             'name': f"{self.first_name} {self.last_name}",
             'bio': self.bio,
             'profile_pic': self.profile_pic_url,
-            'portfolio_pic': self.portfolio_pic_url,
             'galleries': [gallery.to_dict() for gallery in self.galleries] 
         }

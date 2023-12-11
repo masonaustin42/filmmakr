@@ -1,6 +1,5 @@
 from flask import Blueprint, jsonify, session, request
 from app.models import Gallery, Item, db
-from . import validation_errors_to_error_messages
 from flask_login import current_user, login_required
 from app.forms import GalleryForm, ItemForm
 from .aws_helpers import *
@@ -81,8 +80,14 @@ def update_gallery(galleryId):
     
     if form.validate_on_submit():
         gallery.title = form.data["title"]
-        gallery.date = form.data["date"]
-        gallery.password = form.data["password"]
+        if form.data["date"]:
+            gallery.date = form.data["date"]
+        elif form.data["remove_date"]:
+            gallery.date = None
+        if form.data["password"]:
+            gallery.password = form.data["password"]
+        elif form.data["remove_password"]:
+            gallery.password = None
         if form.data["preview"]:
             preview = form.data["preview"]
             preview.filename = get_unique_filename(preview.filename)
@@ -150,6 +155,11 @@ def post_item(galleryId):
             media_type = media.filename.rsplit(".", 1)[1].lower(),
             gallery_id = galleryId
         )
+        
+        if form.data["is_main"]:
+            for galleryItem in gallery.items:
+                galleryItem.is_main = False
+            item.is_main = True
         
         db.session.add(item)
         db.session.commit()

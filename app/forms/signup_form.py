@@ -38,4 +38,3 @@ class SignUpForm(FlaskForm):
     last_name = StringField('last name', validators=[DataRequired()])
     bio = TextAreaField('bio')
     profile_pic = FileField('profile pic', validators=[FileAllowed(["png", "jpg", "jpeg"])])
-    portfolio_pic = FileField('portfolio pic', validators=[FileAllowed(["png", "jpg", "jpeg"])])

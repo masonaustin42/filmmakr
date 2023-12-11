@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   useLocation,
@@ -9,19 +9,30 @@ import OpenModalButton from "../OpenModalButton";
 import CreateItemModal from "../CreateItemModal";
 import DeleteItemModal from "../DeleteItemModal";
 import UpdateItemModal from "../UpdateItemModal";
+import GalleryPassword from "../GalleryPassword";
 import "./gallery.css";
 
 function Gallery() {
   const { galleryId } = useParams();
   const dispatch = useDispatch();
   const location = useLocation();
+  const [passwordRequired, setPasswordRequired] = useState(false);
   const password = new URLSearchParams(location.search).get("p");
   const gallery = useSelector((state) => state.gallery);
   const user = useSelector((state) => state.session?.user);
 
   useEffect(() => {
-    dispatch(fetchGallery(galleryId, password));
+    (async () => {
+      const getGallery = await dispatch(fetchGallery(galleryId, password));
+      if (getGallery?.errors) setPasswordRequired(true);
+    })();
   }, [dispatch, galleryId, password]);
+
+  useEffect(() => {
+    if (!gallery?.preview)
+      document.querySelector("#navbar").classList.add("no-preview");
+    else document.querySelector("#navbar").classList.remove("no-preview");
+  }, [gallery]);
 
   const formatDate = (datestring) => {
     const date = new Date(datestring);
@@ -35,12 +46,15 @@ function Gallery() {
       if (isPreview) {
         return (
           <video
+            key={item.id}
+            className="preview-item"
             autoPlay={true}
             muted={true}
-            key={item.id}
             loop={true}
-            className="preview-item"
-            preload={true}
+            preload=""
+            playsInline={true}
+            disablePictureInPicture={true}
+            disableRemotePlayback={true}
           >
             <source src={`${item.url}`} />
           </video>
@@ -67,9 +81,9 @@ function Gallery() {
       );
     } else if (IMAGE_TYPES.includes(type)) {
       if (isPreview) {
-        <img alt="" key={item.id} className="preview-item">
-          <source src={`${item.url}`} />
-        </img>;
+        return (
+          <img alt="" key={item.id} className="preview-item" src={item.url} />
+        );
       } else {
         return (
           <img
@@ -84,7 +98,8 @@ function Gallery() {
       return null;
     }
   };
-
+  if (passwordRequired)
+    return <GalleryPassword location={location} reset={setPasswordRequired} />;
   if (!gallery) return null;
 
   const mainItem = gallery.items?.main || {};
@@ -99,18 +114,38 @@ function Gallery() {
       }
     : {};
 
-  console.log("PREVIEW:, ", preview);
-
   const VIDEO_TYPES = ["mp4", "mov", "avi", "mpeg"];
   const AUDIO_TYPES = ["mp3", "aiff", "wmv", "wav", "flac"];
   const IMAGE_TYPES = ["jpg", "jpeg", "png", "tiff"];
 
   return (
     <>
-      <div id="preview">{MatchElementToItem(preview, preview.type, true)}</div>
-      <div id="gallery-title-container">
-        <h1 id="gallery-title">{gallery.title}</h1>
-        {gallery?.date && <h2 id="gallery-date">{formatDate(gallery.date)}</h2>}
+      {Object.keys(preview).length ? (
+        <div id="preview">
+          {MatchElementToItem(preview, preview.type, true)}
+        </div>
+      ) : null}
+
+      <div
+        id="gallery-title-container"
+        className={
+          Object.keys(preview).length ? "big-container" : "small-container"
+        }
+      >
+        <h1
+          id="gallery-title"
+          className={Object.keys(preview).length ? "big" : "small"}
+        >
+          {gallery.title}
+        </h1>
+        {gallery?.date && (
+          <h2
+            id="gallery-date"
+            className={Object.keys(preview).length ? "big" : "small"}
+          >
+            {formatDate(gallery.date)}
+          </h2>
+        )}
       </div>
       {gallery?.ownerId === user?.id && (
         <OpenModalButton
@@ -118,22 +153,27 @@ function Gallery() {
           modalComponent={<CreateItemModal galleryId={galleryId} />}
         />
       )}
-      <div id="main-item-container">
-        {mainItem.name && <h2 id="main-item-name">{mainItem.name}</h2>}
-        {MatchElementToItem(mainItem, mainItem.type)}
-        {gallery?.ownerId === user?.id && (
-          <>
-            <OpenModalButton
-              buttonText="Update"
-              modalComponent={<UpdateItemModal item={mainItem} />}
-            />
-            <OpenModalButton
-              buttonText="Delete"
-              modalComponent={<DeleteItemModal itemId={mainItem.id} />}
-            />
-          </>
-        )}
-      </div>
+      {mainItem?.url ? (
+        <div id="main-item-container">
+          {mainItem.name && <h2 id="main-item-name">{mainItem.name}</h2>}
+          {MatchElementToItem(mainItem, mainItem.type)}
+          {gallery?.ownerId === user?.id && (
+            <>
+              <OpenModalButton
+                buttonText="Update"
+                modalComponent={<UpdateItemModal item={mainItem} />}
+              />
+              <OpenModalButton
+                buttonText="Delete"
+                modalComponent={
+                  <DeleteItemModal itemId={mainItem.id} isMain={true} />
+                }
+              />
+            </>
+          )}
+        </div>
+      ) : null}
+
       <div id="items-container">
         {items &&
           items.map((item) => {
@@ -146,7 +186,9 @@ function Gallery() {
                     <>
                       <OpenModalButton
                         buttonText="Delete"
-                        modalComponent={<DeleteItemModal itemId={item.id} />}
+                        modalComponent={
+                          <DeleteItemModal itemId={item.id} isMain={false} />
+                        }
                       />
                       <OpenModalButton
                         buttonText="Update"

@@ -19,9 +19,10 @@ const addItem = (item) => ({
   payload: item,
 });
 
-const removeItem = (itemId) => ({
+const removeItem = (itemId, isMain) => ({
   type: REMOVE_ITEM,
   itemId,
+  isMain,
 });
 
 const putItem = (item) => ({
@@ -39,6 +40,8 @@ export const fetchGallery = (galleryId, password) => async (dispatch) => {
       return data;
     }
     dispatch(setGallery(data.gallery));
+  } else {
+    return await response.json();
   }
 };
 
@@ -83,7 +86,7 @@ export const uploadItem = (formdata, galleryId) => async (dispatch) => {
   }
 };
 
-export const deleteItem = (itemId) => async (dispatch) => {
+export const deleteItem = (itemId, isMain) => async (dispatch) => {
   const response = await fetch(`/api/items/${itemId}`, {
     method: "DELETE",
   });
@@ -92,7 +95,7 @@ export const deleteItem = (itemId) => async (dispatch) => {
     if (data.errors) {
       return data;
     }
-    dispatch(removeItem(itemId));
+    dispatch(removeItem(itemId, isMain));
     return data;
   }
 };
@@ -127,21 +130,48 @@ export default function galleryReducer(state = {}, action) {
     case PATCH_GALLERY:
       return { ...state, ...action.payload };
     case ADD_ITEM:
-      return {
-        ...state,
-        items: { ...state.items, [action.payload.id]: action.payload },
-      };
+      if (action.payload.is_main) {
+        const newState = { ...state };
+        for (let key in newState.items) {
+          newState.items[key].is_main = false;
+        }
+        if (newState.items.main) {
+          const notMainItem = newState.items.main;
+          newState.items[notMainItem.id] = notMainItem;
+        }
+        newState.items.main = action.payload;
+        return newState;
+      } else {
+        return {
+          ...state,
+          items: { ...state.items, [action.payload.id]: action.payload },
+        };
+      }
+
     case REMOVE_ITEM:
       const newState = { ...state };
-      delete newState.items[parseInt(action.itemId)];
+      if (action.isMain) {
+        delete newState.items.main;
+      } else {
+        delete newState.items[parseInt(action.itemId)];
+      }
       return newState;
     case PUT_ITEM:
+      const updatedItems = { ...state.items };
+      if (updatedItems.main) {
+        updatedItems[updatedItems.main.id] = updatedItems.main;
+        updatedItems[updatedItems.main.id].is_main = false;
+        delete updatedItems.main;
+      }
+      updatedItems[action.payload.id] = action.payload;
+      let main = Object.values(updatedItems).find((item) => item.is_main);
+      if (main) {
+        updatedItems.main = main;
+        delete updatedItems[main.id];
+      }
       return {
         ...state,
-        items: {
-          ...state.items,
-          [action.payload.id]: action.payload,
-        },
+        items: updatedItems,
       };
     default:
       return state;

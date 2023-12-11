@@ -1,6 +1,6 @@
 #profile-header {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
   gap: 20px;
   margin: 50px;
@@ -16,6 +16,7 @@
 #bio {
   width: 60%;
   margin: 20px;
+  text-align: center;
 }
 
 #profile-galleries-header {
@@ -34,4 +35,9 @@
   flex-direction: row;
   justify-content: flex-end;
   gap: 10px;
+}
+
+#profile-galleries-list p,
+#profile-galleries-list a {
+  text-align: center;
 }

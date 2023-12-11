@@ -1,0 +1,16 @@
+#delete-container {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  margin: 20px 0;
+}
+
+.delete:hover {
+  color: white;
+  background-color: #db0000;
+}
+
+.no-delete:hover {
+  color: white;
+  background-color: gray;
+}

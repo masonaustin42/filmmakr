@@ -7,6 +7,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 20;
 }
 
 #modal-background {
@@ -20,5 +21,66 @@
 
 #modal-content {
   position: absolute;
-  background-color:white;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 400px;
+  padding: 40px;
+  max-height: 80%;
+  overflow-y: auto;
+}
+
+#modal-content > form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 80%;
+}
+
+#modal-content > form > label {
+  display: flex;
+  flex-direction: column;
+  margin: 4px 0;
+}
+
+#modal-content > form > label,
+#modal-content > form > label > input,
+#modal-content > form > label > textarea {
+  width: 100%;
+  background-color: transparent;
+  transition: all 0.3s ease-in-out;
+}
+
+#modal-content > form > img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+}
+
+.error {
+  color: red;
+  height: 20px;
+  font-size: 14px;
+}
+
+.req {
+  color: red;
+}
+.form-bad {
+  box-shadow: rgba(255, 0, 0, 0.5) 0 0 8px;
+  border: 1px solid rgb(255, 0, 0, 0.5);
+}
+
+.form-good {
+  box-shadow: none;
+  border: 1px solid black;
+}
+
+.form-good:focus {
+  box-shadow: rgba(0, 255, 0, 0.5) 0 0 8px;
+  border: 1px solid rgb(0, 255, 0, 0.5);
+  border-radius: 0;
 }

@@ -45,11 +45,20 @@ button {
   padding: 4px;
   font-size: 18px;
   font-weight: 400;
-  transition: box-shadow 0.4s;
-  transition: color 0.2s;
-  transition: background-color 0.2s;
+  transition: all 0.3s ease-in-out;
 }
 
+input::file-selector-button {
+  color: black;
+  background-color: white;
+  border: 1px solid black;
+  padding: 4px;
+  font-size: 12px;
+  font-weight: 400;
+  transition: all 0.4s ease-in-out;
+}
+
+input::file-selector-button:hover,
 button:hover {
   cursor: pointer;
   box-shadow: rgba(0, 0, 0, 0.12) 0px 8px 8px;
@@ -57,6 +66,20 @@ button:hover {
 
 button:disabled {
   cursor: not-allowed;
-  background-color: gray;
+  background-color: rgb(165, 50, 50);
   color: white;
+}
+
+textarea {
+  resize: vertical;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media screen and (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
 }

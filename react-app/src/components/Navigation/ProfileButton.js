@@ -4,9 +4,10 @@ import { logout } from "../../store/session";
 import OpenModalButton from "../OpenModalButton";
 import LoginFormModal from "../LoginFormModal";
 import SignupFormModal from "../SignupFormModal";
-import { Link } from "react-router-dom/cjs/react-router-dom.min";
+import { Link, useHistory } from "react-router-dom/cjs/react-router-dom.min";
 
 function ProfileButton({ user }) {
+  const history = useHistory();
   const dispatch = useDispatch();
   const [showMenu, setShowMenu] = useState(false);
   const ulRef = useRef();
@@ -33,6 +34,8 @@ function ProfileButton({ user }) {
   const handleLogout = (e) => {
     e.preventDefault();
     dispatch(logout());
+    history.push("/");
+    closeMenu();
   };
 
   const ulClassName = "profile-dropdown" + (showMenu ? "" : " hidden");
@@ -49,15 +52,12 @@ function ProfileButton({ user }) {
             <li>{user.username}</li>
             <li>{user.email}</li>
             <li>
-              <Link
-                onClick={() => setShowMenu(false)}
-                to={`/profiles/${user.username}`}
-              >
+              <Link onClick={closeMenu} to={`/profiles/${user.username}`}>
                 My Profile
               </Link>
             </li>
             <li>
-              <Link onClick={() => setShowMenu(false)} to="/galleries/new">
+              <Link onClick={closeMenu} to="/galleries/new">
                 Create a New Gallery
               </Link>
             </li>
@@ -72,14 +72,14 @@ function ProfileButton({ user }) {
             <li>
               <OpenModalButton
                 buttonText="Log In"
-                onItemClick={closeMenu}
+                onItemClick={() => setShowMenu(false)}
                 modalComponent={<LoginFormModal />}
               />
             </li>
             <li>
               <OpenModalButton
                 buttonText="Sign Up"
-                onItemClick={closeMenu}
+                onItemClick={() => setShowMenu(false)}
                 modalComponent={<SignupFormModal />}
               />
             </li>

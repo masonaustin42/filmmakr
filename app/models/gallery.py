@@ -15,7 +15,7 @@ class Gallery(db.Model):
     preview_url = db.Column(db.String(2000))
     
     owner = db.relationship("User", back_populates="galleries")
-    items = db.relationship("Item", back_populates="gallery")
+    items = db.relationship("Item", back_populates="gallery", cascade="all, delete-orphan")
     
     @property
     def password(self):

@@ -16,8 +16,7 @@ def seed_users():
                 first_name = row[3],
                 last_name = row[4],
                 profile_pic_url = row[5],
-                portfolio_pic_url = row[6],
-                bio = row[7]
+                bio = row[6]
             )
             db.session.add(user)
         db.session.commit()

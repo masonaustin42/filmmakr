@@ -66,13 +66,6 @@ def sign_up():
             if "url" not in profileUpload:
                 return profileUpload, 500
         
-        if form.data["portfolio_pic"]:
-            portfolio_pic = form.data["portfolio_pic"]
-            portfolio_pic.filename = get_unique_filename(portfolio_pic.filename)
-            portfolioUpload = upload_file_to_s3(portfolio_pic)
-            if "url" not in portfolioUpload:
-                return portfolioUpload, 500
-        
         user = User(
             username=form.data['username'],
             email=form.data['email'],
@@ -85,8 +78,6 @@ def sign_up():
         if form.data["profile_pic"]:
             user.profile_pic_url = f"{CLOUDFRONT_URL}/{profile_pic.filename}"
             
-        if form.data["portfolio_pic"]:
-            user.portfolio_pic_url = f"{CLOUDFRONT_URL}/{portfolio_pic.filename}"
         
         db.session.add(user)
         db.session.commit()
