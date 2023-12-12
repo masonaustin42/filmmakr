@@ -8,6 +8,7 @@ import Profile from "./components/ProfilePage";
 import HomePage from "./components/HomePage";
 import NewGallery from "./components/NewGalleryPage";
 import UpdateGallery from "./components/UpdateGalleryPage";
+import Footer from "./components/Footer";
 
 function App() {
   const dispatch = useDispatch();
@@ -38,6 +39,7 @@ function App() {
           </Route>
         </Switch>
       )}
+      <Footer />
     </>
   );
 }
