@@ -9,6 +9,7 @@ import HomePage from "./components/HomePage";
 import NewGallery from "./components/NewGalleryPage";
 import UpdateGallery from "./components/UpdateGalleryPage";
 import Footer from "./components/Footer";
+import NotFound from "./components/NotFound";
 
 function App() {
   const dispatch = useDispatch();
@@ -36,6 +37,9 @@ function App() {
           </Route>
           <Route path="/profiles/:profileUsername">
             <Profile />
+          </Route>
+          <Route>
+            <NotFound />
           </Route>
         </Switch>
       )}
