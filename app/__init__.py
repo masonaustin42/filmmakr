@@ -12,8 +12,10 @@ from .api.item_routes import item_routes
 from .api.profile_routes import profile_routes
 from .seeds import seed_commands
 from .config import Config
+from flask_socketio import SocketIO
 
 app = Flask(__name__, static_folder='../react-app/build', static_url_path='/')
+socketio = SocketIO(app)
 
 # Setup login manager
 login = LoginManager(app)

@@ -2,16 +2,23 @@ import { useDispatch } from "react-redux";
 import { uploadItem } from "../../store/gallery";
 import { useModal } from "../../context/Modal";
 import { useEffect, useState } from "react";
+import { io } from "socket.io-client";
 import "./CreateItem.css";
 
 function CreateItemModal({ galleryId }) {
   const dispatch = useDispatch();
+  const socket = io.connect("http://localhost:4000");
   const { closeModal } = useModal();
   const [name, setName] = useState("");
   const [file, setFile] = useState(null);
   const [isMain, setIsMain] = useState(false);
   const [localFile, setLocalFile] = useState(null);
   const [errors, setErrors] = useState({});
+  const [uploadProgress, setUploadProgress] = useState(0);
+
+  socket.on("progress", function (data) {
+    setUploadProgress(data);
+  });
 
   useEffect(() => {
     const errorsObj = {};
@@ -129,6 +136,8 @@ function CreateItemModal({ galleryId }) {
         <p>
           <span className="req">*</span> indicates required fields
         </p>
+
+        <p>Upload Progress: {uploadProgress}%</p>
 
         <button disabled={Object.keys(errors).length}>Upload Item</button>
       </form>

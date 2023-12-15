@@ -5,18 +5,20 @@ import os
 import uuid
 import threading
 import sys
-
+import boto3
+import os
+from flask_socketio import emit
 
 s3 = boto3.client(
-   "s3",
-   aws_access_key_id=os.environ.get("S3_KEY"),
-   aws_secret_access_key=os.environ.get("S3_SECRET")
+    "s3",
+    aws_access_key_id=os.environ.get("S3_KEY"),
+    aws_secret_access_key=os.environ.get("S3_SECRET")
 )
 
 config = TransferConfig(multipart_threshold=1024 * 25, 
-                        max_concurrency=10,
-                        multipart_chunksize=1024 * 25,
-                        use_threads=True)
+                                max_concurrency=10,
+                                multipart_chunksize=1024 * 25,
+                                use_threads=True)
 
 class ProgressPercentage(object):
         def __init__(self, filename, file_size):
@@ -37,6 +39,10 @@ class ProgressPercentage(object):
                         self._filename, self._seen_so_far, self._size,
                         percentage))
                 sys.stdout.flush()
+                
+def emit_progress(filename, file_size):
+    with ProgressPercentage(filename, file_size) as progress:
+        emit('progress', {'progress': progress})
                 
 
 
@@ -81,7 +87,7 @@ def upload_file_to_s3(file):
             BUCKET_NAME,
             file.filename,
             Config=config,
-            Callback=ProgressPercentage(file.filename, file_size),
+            Callback=emit_progress(file.filename, file_size),
             ExtraArgs={
                 "ContentType": file.content_type
             }
