@@ -2,12 +2,11 @@ import { useDispatch } from "react-redux";
 import { uploadItem } from "../../store/gallery";
 import { useModal } from "../../context/Modal";
 import { useEffect, useState } from "react";
-import { io } from "socket.io-client";
+import { socket } from "../../socket";
 import "./CreateItem.css";
 
 function CreateItemModal({ galleryId }) {
   const dispatch = useDispatch();
-  const socket = io.connect("http://localhost:4000");
   const { closeModal } = useModal();
   const [name, setName] = useState("");
   const [file, setFile] = useState(null);
@@ -19,6 +18,12 @@ function CreateItemModal({ galleryId }) {
   socket.on("progress", function (data) {
     setUploadProgress(data);
   });
+
+  useEffect(() => {
+    if (uploadProgress === 100) {
+      closeModal();
+    }
+  }, [uploadProgress]);
 
   useEffect(() => {
     const errorsObj = {};
@@ -35,9 +40,9 @@ function CreateItemModal({ galleryId }) {
     formdata.append("is_main", isMain);
     const newItem = await dispatch(uploadItem(formdata, galleryId));
     if (newItem?.errors) setErrors(newItem.errors);
-    else {
-      closeModal();
-    }
+    // else {
+    //   closeModal();
+    // }
   };
 
   const onFileChange = (e) => {

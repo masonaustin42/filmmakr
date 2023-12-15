@@ -15,7 +15,7 @@ from .config import Config
 from flask_socketio import SocketIO
 
 app = Flask(__name__, static_folder='../react-app/build', static_url_path='/')
-socketio = SocketIO(app)
+socketio = SocketIO(app, cors_allowed_origins="*")
 
 # Setup login manager
 login = LoginManager(app)
