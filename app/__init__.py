@@ -1,5 +1,6 @@
 import os
 from flask import Flask, render_template, request, session, redirect
+from flask_socketio import SocketIO
 from flask_cors import CORS
 from flask_migrate import Migrate
 from flask_wtf.csrf import CSRFProtect, generate_csrf
@@ -14,6 +15,10 @@ from .seeds import seed_commands
 from .config import Config
 
 app = Flask(__name__, static_folder='../react-app/build', static_url_path='/')
+socketio = SocketIO(app, cors_allowed_origins="*")
+
+if __name__ == '__main__':
+    socketio.run(app)
 
 # Setup login manager
 login = LoginManager(app)
@@ -95,3 +100,4 @@ def react_root(path):
 @app.errorhandler(404)
 def not_found(e):
     return app.send_static_file('index.html')
+
