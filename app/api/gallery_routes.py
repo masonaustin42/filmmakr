@@ -2,7 +2,7 @@ from flask import Blueprint, jsonify, session, request
 from app.models import Gallery, Item, db
 from flask_login import current_user, login_required
 from app.forms import GalleryForm, ItemForm
-from .aws_helpers import get_unique_filename, upload_file_to_s3, remove_file_from_s3
+from .aws_helpers import get_unique_filename, upload_file_to_s3, remove_file_from_s3, CLOUDFRONT_URL
 from datetime import date
 
 gallery_routes = Blueprint('galleries', __name__)
