@@ -1,42 +1,17 @@
 import { useDispatch } from "react-redux";
 import { uploadItem } from "../../store/gallery";
-import { useModal } from "../../context/Modal";
 import { useEffect, useState } from "react";
-import { socket } from "../../socket";
+import FileUpload from "../FileUpload";
 import "./CreateItem.css";
 
 function CreateItemModal({ galleryId }) {
   const dispatch = useDispatch();
-  const { closeModal } = useModal();
   const [name, setName] = useState("");
   const [file, setFile] = useState(null);
   const [isMain, setIsMain] = useState(false);
   const [localFile, setLocalFile] = useState(null);
+  const [isUploading, setIsUploading] = useState(false);
   const [errors, setErrors] = useState({});
-  const [uploadProgress, setUploadProgress] = useState(0);
-  const [smoothProgress, setSmoothProgress] = useState(0);
-
-  socket.on("progress", function (data) {
-    setUploadProgress(data.percentage.toFixed());
-  });
-
-  useEffect(() => {
-    if (uploadProgress >= 100) {
-      closeModal();
-    }
-
-    const smooth = setInterval(() => {
-      if (smoothProgress < uploadProgress) {
-        if (file?.type.includes("video")) {
-          setSmoothProgress((prev) => prev + 0.1);
-        } else {
-          setSmoothProgress((prev) => prev + 1);
-        }
-      }
-    }, 10);
-
-    return () => clearInterval(smooth);
-  }, [uploadProgress]);
 
   useEffect(() => {
     const errorsObj = {};
@@ -51,8 +26,12 @@ function CreateItemModal({ galleryId }) {
     if (name) formdata.append("name", name);
     formdata.append("media", file);
     formdata.append("is_main", isMain);
+    setIsUploading(true);
     const newItem = await dispatch(uploadItem(formdata, galleryId));
-    if (newItem?.errors) setErrors(newItem.errors);
+    if (newItem?.errors) {
+      setErrors(newItem.errors);
+      setIsUploading(false);
+    }
   };
 
   const onFileChange = (e) => {
@@ -101,7 +80,7 @@ function CreateItemModal({ galleryId }) {
 
   return (
     <>
-      {uploadProgress < 1 ? (
+      {!isUploading ? (
         <>
           <h2>Upload an Item</h2>
           <form onSubmit={onSubmit} encType="multipart/formdata">
@@ -157,20 +136,7 @@ function CreateItemModal({ galleryId }) {
           </form>
         </>
       ) : (
-        <>
-          <h2>Uploading</h2>
-          <p>Please do not navigate away from this page...</p>
-          <div className="progress-bar-container">
-            <span>{uploadProgress}%</span>
-            <progress
-              className="progress-bar"
-              max="100"
-              value={`${smoothProgress}`}
-            >
-              {smoothProgress}%
-            </progress>
-          </div>
-        </>
+        <FileUpload />
       )}
     </>
   );

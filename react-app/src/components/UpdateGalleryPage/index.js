@@ -7,6 +7,7 @@ import {
 } from "react-router-dom/cjs/react-router-dom.min";
 import { useModal } from "../../context/Modal";
 import LoginFormModal from "../LoginFormModal";
+import FileUpload from "../FileUpload";
 import "./updateGallery.css";
 
 function UpdateGallery() {
@@ -26,6 +27,8 @@ function UpdateGallery() {
   const [preview, setPreview] = useState(null);
   const [localPreview, setLocalPreview] = useState(null);
   const [errors, setErrors] = useState({});
+
+  const [isUploading, setIsUploading] = useState(false);
 
   useEffect(() => {
     dispatch(fetchGallery(galleryId));
@@ -70,9 +73,11 @@ function UpdateGallery() {
     if (password && resetPassword) formdata.append("password", password);
     else formdata.append("remove_password", true);
     if (preview) formdata.append("preview", preview);
+    setIsUploading(true);
     const newGallery = await dispatch(updateGallery(formdata, galleryId));
     if (newGallery?.errors) {
       setErrors({ ...errors, ...newGallery.errors });
+      setIsUploading(false);
     } else {
       let url = `/galleries/${newGallery.id}`;
       if (isPrivate && password !== "") url += `?p=${password}`;
@@ -120,99 +125,111 @@ function UpdateGallery() {
   if (user?.id !== gallery.ownerId) return setModalContent(<LoginFormModal />);
 
   return (
-    <form id="gallery-form" onSubmit={onSubmit} encType="multipart/formdata">
-      <h1 className="gallery-form-header">Update Gallery</h1>
-      <label className="gallery-form-label">
-        <span>
-          Title<span className="req">*</span>
-        </span>
-        <input
-          type="text"
-          placeholder="Title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          className={errors.title ? "form-bad" : "form-good"}
-        />
-      </label>
-      <p className="error">{errors.title}</p>
-      <label className="gallery-form-label">
-        Date
-        <input
-          type="date"
-          value={date}
-          onChange={(e) => setDate(e.target.value)}
-          className={errors.date ? "form-bad" : "form-good"}
-        />
-        <button type="button" onClick={() => setDate("")}>
-          Remove Date
-        </button>
-      </label>
+    <>
+      <form id="gallery-form" onSubmit={onSubmit} encType="multipart/formdata">
+        {!isUploading ? (
+          <>
+            <h1 className="gallery-form-header">Update Gallery</h1>
+            <label className="gallery-form-label">
+              <span>
+                Title<span className="req">*</span>
+              </span>
+              <input
+                type="text"
+                placeholder="Title"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                className={errors.title ? "form-bad" : "form-good"}
+              />
+            </label>
+            <p className="error">{errors.title}</p>
+            <label className="gallery-form-label">
+              Date
+              <input
+                type="date"
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+                className={errors.date ? "form-bad" : "form-good"}
+              />
+              <button type="button" onClick={() => setDate("")}>
+                Remove Date
+              </button>
+            </label>
 
-      <p className="error">{errors.date}</p>
-      <label id="gallery-form-private">
-        Private
-        <input
-          type="checkbox"
-          value={isPrivate}
-          checked={isPrivate}
-          onChange={() => setIsPrivate(!isPrivate)}
-        />
-      </label>
-      <label
-        id="gallery-form-reset-password"
-        hidden={!(wasPrivate && isPrivate)}
-      >
-        Reset Password?
-        <input
-          type="checkbox"
-          value={resetPassword}
-          checked={resetPassword}
-          onChange={() => setResetPassword(!resetPassword)}
-        />
-      </label>
-      {resetPassword && (
-        <>
-          <label className="gallery-form-label">
-            <span>
-              Password<span className="req">*</span>
-            </span>
-            <input
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className={errors.password ? "form-bad" : "form-good"}
-            />
-          </label>
-          <p className="error">{errors.password}</p>
-          <label className="gallery-form-label">
-            <span>
-              Confirm Password<span className="req">*</span>
-            </span>
-            <input
-              type="password"
-              placeholder="Confirm Password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              className={errors.confirmPassword ? "form-bad" : "form-good"}
-            />
-          </label>
-          <p className="error">{errors.confirmPassword}</p>
-        </>
-      )}
-      {localPreview && MatchElementToItem(localPreview)}
+            <p className="error">{errors.date}</p>
+            <label id="gallery-form-private">
+              Private
+              <input
+                type="checkbox"
+                value={isPrivate}
+                checked={isPrivate}
+                onChange={() => setIsPrivate(!isPrivate)}
+              />
+            </label>
+            <label
+              id="gallery-form-reset-password"
+              hidden={!(wasPrivate && isPrivate)}
+            >
+              Reset Password?
+              <input
+                type="checkbox"
+                value={resetPassword}
+                checked={resetPassword}
+                onChange={() => setResetPassword(!resetPassword)}
+              />
+            </label>
+            {resetPassword && (
+              <>
+                <label className="gallery-form-label">
+                  <span>
+                    Password<span className="req">*</span>
+                  </span>
+                  <input
+                    type="password"
+                    placeholder="Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className={errors.password ? "form-bad" : "form-good"}
+                  />
+                </label>
+                <p className="error">{errors.password}</p>
+                <label className="gallery-form-label">
+                  <span>
+                    Confirm Password<span className="req">*</span>
+                  </span>
+                  <input
+                    type="password"
+                    placeholder="Confirm Password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    className={
+                      errors.confirmPassword ? "form-bad" : "form-good"
+                    }
+                  />
+                </label>
+                <p className="error">{errors.confirmPassword}</p>
+              </>
+            )}
+            {localPreview && MatchElementToItem(localPreview)}
 
-      <label className="gallery-form-label">
-        Preview Media (Image or Video File)
-        <input type="file" onChange={onImageChange} />
-      </label>
+            <label className="gallery-form-label">
+              Preview Media (Image or Video File)
+              <input type="file" onChange={onImageChange} />
+            </label>
 
-      <p>
-        <span className="req">*</span> indicates required fields
-      </p>
+            <p>
+              <span className="req">*</span> indicates required fields
+            </p>
 
-      <button disabled={Object.values(errors).length}>Update Gallery</button>
-    </form>
+            <button disabled={Object.values(errors).length}>
+              Update Gallery
+            </button>
+          </>
+        ) : (
+          <FileUpload />
+        )}
+      </form>
+    </>
   );
 }
 
