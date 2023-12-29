@@ -8,6 +8,8 @@ import Profile from "./components/ProfilePage";
 import HomePage from "./components/HomePage";
 import NewGallery from "./components/NewGalleryPage";
 import UpdateGallery from "./components/UpdateGalleryPage";
+import Footer from "./components/Footer";
+import NotFound from "./components/NotFound";
 
 function App() {
   const dispatch = useDispatch();

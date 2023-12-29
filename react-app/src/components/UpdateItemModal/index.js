@@ -1,6 +1,7 @@
 import { useDispatch } from "react-redux";
 import { updateItem } from "../../store/gallery";
 import { useModal } from "../../context/Modal";
+import FileUpload from "../FileUpload";
 import { useState } from "react";
 
 function UpdateItemModal({ item }) {
@@ -10,9 +11,9 @@ function UpdateItemModal({ item }) {
   const [isMain, setIsMain] = useState(item.is_main);
   const [file, setFile] = useState(null);
   const [localFile, setLocalFile] = useState(item.url);
-  // const [localFileType, setLocalFileType] = useState(item.type);
   const localFileType = item.type;
   const [errors, setErrors] = useState({});
+  const [isUploading, setIsUploading] = useState(false);
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -20,10 +21,11 @@ function UpdateItemModal({ item }) {
     if (name) formdata.append("name", name);
     if (file) formdata.append("media", file);
     formdata.append("is_main", isMain);
+    setIsUploading(true);
     const newItem = await dispatch(updateItem(formdata, item.id));
-    if (newItem.errors) setErrors(newItem.errors);
-    else {
-      closeModal();
+    if (newItem.errors) {
+      setIsUploading(false);
+      setErrors(newItem.errors);
     }
   };
 
@@ -78,58 +80,64 @@ function UpdateItemModal({ item }) {
 
   return (
     <>
-      <h2>Upload an Item</h2>
-      <form onSubmit={onSubmit} encType="multipart/formdata">
-        <label>
-          Name
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className={errors.name ? "form-bad" : "form-good"}
-          />
-        </label>
-        <p className="error">{errors.name}</p>
+      {!isUploading ? (
+        <>
+          <h2>Upload an Item</h2>
+          <form onSubmit={onSubmit} encType="multipart/formdata">
+            <label>
+              Name
+              <input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className={errors.name ? "form-bad" : "form-good"}
+              />
+            </label>
+            <p className="error">{errors.name}</p>
 
-        {localFile && MatchElementToItem(file, localFile)}
-        <label>
-          <span>
-            File
-            <span className="req">*</span>
-          </span>
-          <input type="file" onChange={onFileChange} />
-        </label>
-        <p className="error">{errors.file}</p>
-        <div id="is-main-container">
-          <p>Is this item the main item of the gallery?</p>
-          <label>
-            <input
-              type="radio"
-              value={true}
-              name="isMain"
-              checked={isMain === true}
-              onChange={() => setIsMain(true)}
-            />
-            Yes
-          </label>
-          <label>
-            <input
-              type="radio"
-              value={false}
-              name="isMain"
-              checked={isMain === false}
-              onChange={() => setIsMain(false)}
-            />
-            No
-          </label>
-        </div>
+            {localFile && MatchElementToItem(file, localFile)}
+            <label>
+              <span>
+                File
+                <span className="req">*</span>
+              </span>
+              <input type="file" onChange={onFileChange} />
+            </label>
+            <p className="error">{errors.file}</p>
+            <div id="is-main-container">
+              <p>Is this item the main item of the gallery?</p>
+              <label>
+                <input
+                  type="radio"
+                  value={true}
+                  name="isMain"
+                  checked={isMain === true}
+                  onChange={() => setIsMain(true)}
+                />
+                Yes
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  value={false}
+                  name="isMain"
+                  checked={isMain === false}
+                  onChange={() => setIsMain(false)}
+                />
+                No
+              </label>
+            </div>
 
-        <p>
-          <span className="req">*</span> indicates required fields
-        </p>
+            <p>
+              <span className="req">*</span> indicates required fields
+            </p>
 
-        <button>Update Item</button>
-      </form>
+            <button>Update Item</button>
+          </form>
+        </>
+      ) : (
+        <FileUpload />
+      )}
     </>
   );
 }
