@@ -8,7 +8,7 @@ const Footer = () => {
         </a>
       </div>
       <div>
-        <p>Filmmakr was created by Mason Austin.</p>
+        <p>Filmmakr was created by Mason Austin</p>
         <ul>
           <li>
             <a href="https://www.linkedin.com/in/mason-austin-a1b568240/">
