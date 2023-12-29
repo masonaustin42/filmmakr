@@ -4,7 +4,7 @@ import { createGallery } from "../../store/gallery";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import { useModal } from "../../context/Modal";
 import LoginFormModal from "../LoginFormModal";
-import { socket } from "../../socket";
+import FileUpload from "../FileUpload";
 import "./newGallery.css";
 
 function NewGallery() {
@@ -20,12 +20,7 @@ function NewGallery() {
   const [preview, setPreview] = useState(null);
   const [localPreview, setLocalPreview] = useState(null);
   const [errors, setErrors] = useState({});
-  const [uploadProgress, setUploadProgress] = useState(0);
-  const [smoothProgress, setSmoothProgress] = useState(0);
-
-  socket.on("progress", function (data) {
-    setUploadProgress(data.percentage.toFixed());
-  });
+  const [isUploading, setIsUploading] = useState(false);
 
   useEffect(() => {
     const errorsObj = {};
@@ -39,20 +34,6 @@ function NewGallery() {
     setErrors(errorsObj);
   }, [title, password, confirmPassword, isPrivate]);
 
-  useEffect(() => {
-    const smooth = setInterval(() => {
-      if (smoothProgress < uploadProgress) {
-        if (preview?.type.includes("video")) {
-          setSmoothProgress((prev) => prev + 0.1);
-        } else {
-          setSmoothProgress((prev) => prev + 1);
-        }
-      }
-    }, 10);
-
-    return () => clearInterval(smooth);
-  }, [uploadProgress]);
-
   const onSubmit = async (e) => {
     e.preventDefault();
     if (!user) return setModalContent(<LoginFormModal />);
@@ -61,8 +42,10 @@ function NewGallery() {
     if (date) formdata.append("date", date);
     if (password && isPrivate) formdata.append("password", password);
     if (preview) formdata.append("preview", preview);
+    setIsUploading(true);
     const newGallery = await dispatch(createGallery(formdata));
     if (newGallery?.errors) {
+      setIsUploading(false);
       setErrors({ ...errors, ...newGallery.errors });
     } else {
       let url = `/galleries/${newGallery.id}`;
@@ -109,7 +92,7 @@ function NewGallery() {
   return (
     <>
       <form id="gallery-form" onSubmit={onSubmit} encType="multipart/formdata">
-        {uploadProgress < 1 ? (
+        {!isUploading ? (
           <>
             <h1 className="gallery-form-header">New Gallery</h1>
             <label className="gallery-form-label">
@@ -197,20 +180,7 @@ function NewGallery() {
             </button>
           </>
         ) : (
-          <>
-            <h2>Uploading</h2>
-            <p>Please do not navigate away from this page...</p>
-            <div className="progress-bar-container">
-              <span>{uploadProgress}%</span>
-              <progress
-                className="progress-bar"
-                max="100"
-                value={`${smoothProgress}`}
-              >
-                {smoothProgress}%
-              </progress>
-            </div>
-          </>
+          <FileUpload />
         )}
       </form>
     </>
