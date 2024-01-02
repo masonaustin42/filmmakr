@@ -7,7 +7,7 @@ RUN apk add build-base
 RUN apk add postgresql-dev gcc python3-dev musl-dev
 ARG FLASK_APP
 ARG FLASK_ENV
-ARG DATABASE_URL
+ARG DATABASE_URL=sqlite:///dev.db
 ARG SCHEMA
 ARG REACT_APP_BASE_URL
 ARG SECRET_KEY
@@ -19,4 +19,4 @@ COPY . .
 COPY --from=build /react_app /var/www/react-app
 RUN flask db upgrade
 RUN flask seed all
-CMD gunicorn app:app
+CMD uvicorn app:app
