@@ -56,7 +56,7 @@ class ProgressPercentage(object):
             def __call__(self, bytes_amount):
                 with self._lock:
                     self._seen_so_far += bytes_amount
-                    percentage = (self._seen_so_far / self._size) * 100
+                    percentage = round((self._seen_so_far / self._size) * 100)
                     self._socket.emit('progress', {'percentage': percentage})
                 
 

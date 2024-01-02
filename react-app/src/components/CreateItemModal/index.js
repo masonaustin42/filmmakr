@@ -1,17 +1,31 @@
 import { useDispatch } from "react-redux";
 import { uploadItem } from "../../store/gallery";
 import { useEffect, useState } from "react";
+import { io } from "socket.io-client";
+import { useModal } from "../../context/Modal";
 import FileUpload from "../FileUpload";
 import "./CreateItem.css";
 
 function CreateItemModal({ galleryId }) {
   const dispatch = useDispatch();
+  const { closeModal } = useModal();
   const [name, setName] = useState("");
   const [file, setFile] = useState(null);
   const [isMain, setIsMain] = useState(false);
   const [localFile, setLocalFile] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
   const [errors, setErrors] = useState({});
+  const [uploadProgress, setUploadProgress] = useState(0);
+
+  const url =
+    process.env.NODE_ENV === "production" ? undefined : "http://localhost:3000";
+  const socket = io(url, {
+    autoConnect: false,
+  });
+
+  socket.on("progress", function (data) {
+    setUploadProgress(data.percentage.toFixed());
+  });
 
   useEffect(() => {
     const errorsObj = {};
@@ -19,6 +33,23 @@ function CreateItemModal({ galleryId }) {
     if (!file) errorsObj.file = "Image, Audio, or Video file is required";
     setErrors(errorsObj);
   }, [name, file]);
+
+  useEffect(() => {
+    if (isUploading) {
+      socket.connect();
+    }
+    return () => {
+      socket.disconnect();
+    };
+  }, [isUploading]);
+
+  useEffect(() => {
+    if (uploadProgress >= 100) {
+      setIsUploading(false);
+      setUploadProgress(0);
+      closeModal();
+    }
+  }, [uploadProgress]);
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -136,7 +167,7 @@ function CreateItemModal({ galleryId }) {
           </form>
         </>
       ) : (
-        <FileUpload />
+        <FileUpload uploadProgress={uploadProgress} />
       )}
     </>
   );

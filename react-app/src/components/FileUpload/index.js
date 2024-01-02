@@ -1,27 +1,29 @@
-import { useState, useEffect } from "react";
-import { socket } from "../../socket";
-import { useModal } from "../../context/Modal";
+// import { useState, useEffect } from "react";
+// import { socket } from "../../socket";
+// import { useModal } from "../../context/Modal";
+// import { io } from "socket.io-client";
 import "./FileUpload.css";
 
-const FileUpload = () => {
-  const [uploadProgress, setUploadProgress] = useState(0);
+const FileUpload = ({ uploadProgress }) => {
+  // const [uploadProgress, setUploadProgress] = useState(0);
 
-  const { closeModal } = useModal();
+  // const { closeModal } = useModal();
 
-  useEffect(() => {
-    socket.connect();
-  });
+  // const URL =
+  //   process.env.NODE_ENV === "production" ? undefined : "http://localhost:3000";
+  // const socket = io(URL);
 
-  socket.on("progress", function (data) {
-    setUploadProgress(data.percentage.toFixed());
-  });
+  // socket.on("progress", function (data) {
+  //   console.log(data);
+  //   setUploadProgress(data.percentage.toFixed());
+  // });
 
-  useEffect(() => {
-    if (uploadProgress >= 100) {
-      closeModal();
-      socket.disconnect();
-    }
-  }, [uploadProgress]);
+  // useEffect(() => {
+  //   if (uploadProgress >= 100) {
+  //     closeModal();
+  //     socket.disconnect();
+  //   }
+  // }, [uploadProgress]);
 
   return (
     <>
