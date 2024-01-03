@@ -19,13 +19,7 @@ function CreateItemModal({ galleryId }) {
 
   const url =
     process.env.NODE_ENV === "production" ? undefined : "http://localhost:3000";
-  const socket = io(url, {
-    autoConnect: false,
-  });
-
-  socket.on("progress", function (data) {
-    setUploadProgress(data.percentage.toFixed());
-  });
+  const socket = io(url);
 
   useEffect(() => {
     const errorsObj = {};
@@ -35,13 +29,18 @@ function CreateItemModal({ galleryId }) {
   }, [name, file]);
 
   useEffect(() => {
-    if (isUploading) {
-      socket.connect();
-    }
+    socket.on("connect", () => {
+      console.log("connected");
+    });
+
+    socket.on("progress", function (data) {
+      setUploadProgress(data.percentage.toFixed());
+    });
+
     return () => {
       socket.disconnect();
     };
-  }, [isUploading]);
+  }, []);
 
   useEffect(() => {
     if (uploadProgress >= 100) {
