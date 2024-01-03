@@ -1,29 +1,39 @@
-// import { useState, useEffect } from "react";
-// import { socket } from "../../socket";
-// import { useModal } from "../../context/Modal";
-// import { io } from "socket.io-client";
+import { useState, useEffect } from "react";
+import { useModal } from "../../context/Modal";
+import { io } from "socket.io-client";
 import "./FileUpload.css";
 
-const FileUpload = ({ uploadProgress }) => {
-  // const [uploadProgress, setUploadProgress] = useState(0);
+const FileUpload = () => {
+  const [uploadProgress, setUploadProgress] = useState(0);
 
-  // const { closeModal } = useModal();
+  const { closeModal } = useModal();
 
-  // const URL =
-  //   process.env.NODE_ENV === "production" ? undefined : "http://localhost:3000";
-  // const socket = io(URL);
+  useEffect(() => {
+    const URL =
+      process.env.NODE_ENV === "production"
+        ? "wss://filmmakr.onrender.com/"
+        : "http://localhost:3000";
+    const socket = io(URL);
 
-  // socket.on("progress", function (data) {
-  //   console.log(data);
-  //   setUploadProgress(data.percentage.toFixed());
-  // });
+    socket.on("connect", () => {
+      console.log("websocket connected");
+    });
 
-  // useEffect(() => {
-  //   if (uploadProgress >= 100) {
-  //     closeModal();
-  //     socket.disconnect();
-  //   }
-  // }, [uploadProgress]);
+    socket.on("progress", function (data) {
+      setUploadProgress(data.percentage.toFixed());
+    });
+
+    return () => {
+      socket.disconnect();
+      console.log("websocket disconnected");
+    };
+  }, []);
+
+  useEffect(() => {
+    if (uploadProgress >= 100) {
+      closeModal();
+    }
+  }, [uploadProgress]);
 
   return (
     <>

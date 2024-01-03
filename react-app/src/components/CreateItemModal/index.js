@@ -1,21 +1,20 @@
 import { useDispatch } from "react-redux";
 import { uploadItem } from "../../store/gallery";
 import { useEffect, useState } from "react";
-import { io } from "socket.io-client";
-import { useModal } from "../../context/Modal";
+// import { io } from "socket.io-client";
+// import { useModal } from "../../context/Modal";
 import FileUpload from "../FileUpload";
 import "./CreateItem.css";
 
 function CreateItemModal({ galleryId }) {
   const dispatch = useDispatch();
-  const { closeModal } = useModal();
+  // const { closeModal } = useModal();
   const [name, setName] = useState("");
   const [file, setFile] = useState(null);
   const [isMain, setIsMain] = useState(false);
   const [localFile, setLocalFile] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
   const [errors, setErrors] = useState({});
-  const [uploadProgress, setUploadProgress] = useState(0);
 
   useEffect(() => {
     const errorsObj = {};
@@ -23,36 +22,6 @@ function CreateItemModal({ galleryId }) {
     if (!file) errorsObj.file = "Image, Audio, or Video file is required";
     setErrors(errorsObj);
   }, [name, file]);
-
-  useEffect(() => {
-    const url =
-      process.env.NODE_ENV === "production"
-        ? "wss://filmmakr.onrender.com/"
-        : "http://localhost:3000";
-    const socket = io(url);
-
-    socket.on("connect", () => {
-      console.log("connected");
-    });
-
-    socket.on("progress", function (data) {
-      console.log("progress", data.percentage);
-      setUploadProgress(data.percentage.toFixed());
-    });
-
-    return () => {
-      socket.disconnect();
-      console.log("disconnected");
-    };
-  }, []);
-
-  useEffect(() => {
-    if (uploadProgress >= 100) {
-      setIsUploading(false);
-      setUploadProgress(0);
-      closeModal();
-    }
-  }, [uploadProgress]);
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -64,7 +33,6 @@ function CreateItemModal({ galleryId }) {
     const newItem = await dispatch(uploadItem(formdata, galleryId));
     if (newItem?.errors) {
       setErrors(newItem.errors);
-      setIsUploading(false);
     }
   };
 
@@ -170,7 +138,7 @@ function CreateItemModal({ galleryId }) {
           </form>
         </>
       ) : (
-        <FileUpload uploadProgress={uploadProgress} />
+        <FileUpload />
       )}
     </>
   );
