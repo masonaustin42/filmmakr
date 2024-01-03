@@ -17,10 +17,6 @@ function CreateItemModal({ galleryId }) {
   const [errors, setErrors] = useState({});
   const [uploadProgress, setUploadProgress] = useState(0);
 
-  const url =
-    process.env.NODE_ENV === "production" ? undefined : "http://localhost:3000";
-  const socket = io(url);
-
   useEffect(() => {
     const errorsObj = {};
     if (name.length > 255) errorsObj.name = "Name must be under 255 characters";
@@ -29,16 +25,24 @@ function CreateItemModal({ galleryId }) {
   }, [name, file]);
 
   useEffect(() => {
+    const url =
+      process.env.NODE_ENV === "production"
+        ? "wss://filmmakr.onrender.com/"
+        : "http://localhost:3000";
+    const socket = io(url);
+
     socket.on("connect", () => {
       console.log("connected");
     });
 
     socket.on("progress", function (data) {
+      console.log("progress", data.percentage);
       setUploadProgress(data.percentage.toFixed());
     });
 
     return () => {
       socket.disconnect();
+      console.log("disconnected");
     };
   }, []);
 
