@@ -13,7 +13,7 @@ ARG REACT_APP_BASE_URL
 ARG SECRET_KEY
 WORKDIR /var/www
 COPY requirements.txt .
-RUN pip install -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 RUN pip install psycopg2
 COPY . .
 COPY --from=build /react_app /var/www/react-app
