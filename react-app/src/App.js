@@ -10,6 +10,8 @@ import NewGallery from "./components/NewGalleryPage";
 import UpdateGallery from "./components/UpdateGalleryPage";
 import Footer from "./components/Footer";
 import NotFound from "./components/NotFound";
+import Followers from "./components/Followers";
+import Following from "./components/Following";
 
 function App() {
   const dispatch = useDispatch();
@@ -34,6 +36,12 @@ function App() {
           </Route>
           <Route exact path="/galleries/:galleryId">
             <Gallery />
+          </Route>
+          <Route exact path="/profiles/:profileUsername/followers">
+            <Followers />
+          </Route>
+          <Route exact path="/profiles/:profileUsername/following">
+            <Following />
           </Route>
           <Route path="/profiles/:profileUsername">
             <Profile />

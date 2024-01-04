@@ -51,7 +51,9 @@ class User(db.Model, UserMixin):
             'name': f"{self.first_name} {self.last_name}",
             'bio': self.bio,
             'profile_pic': self.profile_pic_url,
-            'galleries': [gallery.to_dict() for gallery in self.galleries if gallery.password is None]
+            'galleries': [gallery.to_dict() for gallery in self.galleries if gallery.password is None],
+            'follows': [follow.user.to_dict_simple() for follow in self.follows],
+            'following': [follow.following.to_dict_simple() for follow in self.following],
         }
         
     def to_dict_profile_full(self):
@@ -61,7 +63,9 @@ class User(db.Model, UserMixin):
             'name': f"{self.first_name} {self.last_name}",
             'bio': self.bio,
             'profile_pic': self.profile_pic_url,
-            'galleries': [gallery.to_dict() for gallery in self.galleries] 
+            'galleries': [gallery.to_dict() for gallery in self.galleries],
+            'follows': [follow.user.to_dict_simple() for follow in self.follows],
+            'following': [follow.following.to_dict_simple() for follow in self.following],
         }
 
     def to_dict_simple(self):

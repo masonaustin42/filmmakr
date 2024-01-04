@@ -44,9 +44,18 @@ function Profile() {
     <>
       <div id="profile-header">
         {profile.profile_pic && (
-          <img id="profile-pic" src={profile.profile_pic} alt="" />
+          <img className="profile-pic" src={profile.profile_pic} alt="" />
         )}
         <h1>{profile.name}</h1>
+      </div>
+      <div>
+        <Link to={`/profiles/${profile.username}/followers`}>
+          {profile?.follows ? profile.follows.length : null} Followers
+        </Link>
+        <p></p>
+        <Link to={`/profiles/${profile.username}/following`}>
+          {profile?.following ? profile.following.length : null} Following
+        </Link>
       </div>
       <p id="bio">{profile.bio}</p>
       <h2 id="profile-galleries-header">{profile.name}'s Galleries</h2>

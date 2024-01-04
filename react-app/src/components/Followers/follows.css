@@ -1,0 +1,11 @@
+.follow-user {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  margin: 10px 0;
+}
+
+.follow-user > p {
+  font-size: 20px;
+}
