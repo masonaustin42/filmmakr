@@ -6,6 +6,17 @@
   margin: 10px 0;
 }
 
+.follow-user:hover {
+  cursor: pointer;
+}
+
 .follow-user > p {
   font-size: 20px;
+}
+
+.profile-pic-small {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 20px;
 }

@@ -9,6 +9,7 @@ import {
 import OpenModalButton from "../OpenModalButton";
 import DeleteGalleryModal from "../DeleteGalleryModal";
 import "./profile.css";
+import FollowButton from "./FollowButton";
 
 function Profile() {
   const history = useHistory();
@@ -39,23 +40,37 @@ function Profile() {
   }, [profileUsername, user]);
 
   if (!profile) return null;
+  console.log(profile);
 
   return (
     <>
       <div id="profile-header">
-        {profile.profile_pic && (
-          <img className="profile-pic" src={profile.profile_pic} alt="" />
-        )}
-        <h1>{profile.name}</h1>
-      </div>
-      <div>
-        <Link to={`/profiles/${profile.username}/followers`}>
-          {profile?.follows ? profile.follows.length : null} Followers
-        </Link>
-        <p></p>
-        <Link to={`/profiles/${profile.username}/following`}>
-          {profile?.following ? profile.following.length : null} Following
-        </Link>
+        <img className="profile-pic" src={profile.profile_pic} alt="" />
+        <div id="profile-info">
+          <div className="follow-links">
+            <h1>{profile.name}</h1>
+            {user && !isCurrentUser ? (
+              <FollowButton
+                user={user}
+                profileUsername={profile.username}
+                profileId={profile.id}
+              />
+            ) : null}
+          </div>
+          <div className="follow-links">
+            <Link to={`/profiles/${profile.username}/followers`}>
+              <span>{profile?.follows ? profile.follows.length : null}</span>{" "}
+              Followers
+            </Link>
+            <p></p>
+            <Link to={`/profiles/${profile.username}/following`}>
+              <span>
+                {profile?.following ? profile.following.length : null}
+              </span>{" "}
+              Following
+            </Link>
+          </div>
+        </div>
       </div>
       <p id="bio">{profile.bio}</p>
       <h2 id="profile-galleries-header">{profile.name}'s Galleries</h2>

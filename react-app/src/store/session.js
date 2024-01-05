@@ -1,6 +1,8 @@
 // constants
 const SET_USER = "session/SET_USER";
 const REMOVE_USER = "session/REMOVE_USER";
+const ADD_FOLLOW = "session/ADD_FOLLOW";
+const REMOVE_FOLLOW = "session/REMOVE_FOLLOW";
 
 const setUser = (user) => ({
   type: SET_USER,
@@ -12,6 +14,16 @@ const removeUser = () => ({
 });
 
 const initialState = { user: null };
+
+const addFollow = (follow) => ({
+  type: ADD_FOLLOW,
+  payload: follow,
+});
+
+const removeFollow = (follow) => ({
+  type: REMOVE_FOLLOW,
+  payload: follow,
+});
 
 export const authenticate = () => async (dispatch) => {
   const response = await fetch("/api/auth/", {
@@ -87,12 +99,60 @@ export const signUp = (formdata) => async (dispatch) => {
   }
 };
 
+export const followUser = (userId, username) => async (dispatch) => {
+  const response = await fetch(`/api/follows/${userId}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (response.ok) {
+    const data = await response.json();
+    dispatch(addFollow(username));
+    return data;
+  }
+};
+
+export const unfollowUser = (userId, username) => async (dispatch) => {
+  const response = await fetch(`/api/follows/${userId}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (response.ok) {
+    const data = await response.json();
+    dispatch(removeFollow(username));
+    return data;
+  }
+};
+
 export default function reducer(state = initialState, action) {
   switch (action.type) {
     case SET_USER:
       return { user: action.payload };
     case REMOVE_USER:
       return { user: null };
+    case ADD_FOLLOW:
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          following: [...state.user.following, action.payload],
+        },
+      };
+    case REMOVE_FOLLOW:
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          following: state.user.following.filter(
+            (follow) => follow !== action.payload
+          ),
+        },
+      };
     default:
       return state;
   }

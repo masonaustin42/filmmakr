@@ -47,6 +47,7 @@ class User(db.Model, UserMixin):
         
     def to_dict_profile(self):
         return {
+            'id': self.id,
             'username': self.username,
             'name': f"{self.first_name} {self.last_name}",
             'bio': self.bio,
@@ -58,6 +59,7 @@ class User(db.Model, UserMixin):
         
     def to_dict_profile_full(self):
         return {
+            'id': self.id,
             'username': self.username,
             'email': self.email,
             'name': f"{self.first_name} {self.last_name}",
@@ -70,6 +72,7 @@ class User(db.Model, UserMixin):
 
     def to_dict_simple(self):
         return {
+            'id': self.id,
             'username': self.username,
             'name': f"{self.first_name} {self.last_name}",
             'profile_pic': self.profile_pic_url

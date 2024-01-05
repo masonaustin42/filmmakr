@@ -41,7 +41,7 @@ function Followers() {
                   }}
                 >
                   <img
-                    className="profile-pic"
+                    className="profile-pic-small"
                     src={follower.profile_pic}
                     alt=""
                   />
