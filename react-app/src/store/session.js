@@ -109,7 +109,7 @@ export const followUser = (userId, username) => async (dispatch) => {
 
   if (response.ok) {
     const data = await response.json();
-    dispatch(addFollow(username));
+    dispatch(addFollow(data));
     return data;
   }
 };
@@ -124,7 +124,7 @@ export const unfollowUser = (userId, username) => async (dispatch) => {
 
   if (response.ok) {
     const data = await response.json();
-    dispatch(removeFollow(username));
+    dispatch(removeFollow(data));
     return data;
   }
 };
@@ -144,12 +144,13 @@ export default function reducer(state = initialState, action) {
         },
       };
     case REMOVE_FOLLOW:
+      console.log(action.payload);
       return {
         ...state,
         user: {
           ...state.user,
           following: state.user.following.filter(
-            (follow) => follow !== action.payload
+            (follow) => follow.id !== action.payload.id
           ),
         },
       };

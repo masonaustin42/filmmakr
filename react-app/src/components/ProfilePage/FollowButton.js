@@ -9,7 +9,9 @@ function FollowButton({ user, profileUsername, profileId }) {
 
   useEffect(() => {
     if (user?.following) {
-      setIsFollowing(user.following.includes(profileUsername));
+      setIsFollowing(
+        user.following.find((profile) => profile.username === profileUsername)
+      );
     }
   }, [user, profileUsername]);
 

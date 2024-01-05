@@ -5,6 +5,7 @@ import {
   useHistory,
   useParams,
 } from "react-router-dom/cjs/react-router-dom.min";
+import FollowButton from "../ProfilePage/FollowButton";
 
 function Followers() {
   const history = useHistory();
@@ -32,19 +33,27 @@ function Followers() {
         <div>
           {profile?.following
             ? profile.following.map((follower) => (
-                <div
-                  className="follow-user"
-                  key={follower.id}
-                  onClick={() => {
-                    history.push(`/profiles/${follower.username}`);
-                  }}
-                >
-                  <img
-                    className="profile-pic-small"
-                    src={follower.profile_pic}
-                    alt=""
-                  />
-                  <p>{follower.username}</p>
+                <div key={follower.id}>
+                  <div
+                    className="follow-user"
+                    onClick={() => {
+                      history.push(`/profiles/${follower.username}`);
+                    }}
+                  >
+                    <img
+                      className="profile-pic-small"
+                      src={follower.profile_pic}
+                      alt=""
+                    />
+                    <p>{follower.username}</p>
+                  </div>
+                  {user && user.id !== follower.id ? (
+                    <FollowButton
+                      user={user}
+                      profileUsername={follower.username}
+                      profileId={follower.id}
+                    />
+                  ) : null}
                 </div>
               ))
             : null}
