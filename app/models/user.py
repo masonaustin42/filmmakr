@@ -19,6 +19,8 @@ class User(db.Model, UserMixin):
     profile_pic_url = db.Column(db.String(1500))
     
     galleries = db.relationship('Gallery', back_populates='owner', cascade='all, delete-orphan')
+    following = db.relationship('Follow', back_populates='user', cascade='all, delete-orphan', foreign_keys='Follow.user_id')
+    follows = db.relationship('Follow', back_populates='following', cascade='all, delete-orphan', foreign_keys='Follow.following_id')
     
 
     @property
@@ -38,24 +40,49 @@ class User(db.Model, UserMixin):
             'username': self.username,
             'email': self.email,
             'name': f"{self.first_name} {self.last_name}",
-            'profile_pic': self.profile_pic_url
+            'profile_pic': self.profile_pic_url,
+            'follows': [follow.user.to_dict_simple() for follow in self.follows],
+            'following': [follow.following.to_dict_simple() for follow in self.following],
         }
         
     def to_dict_profile(self):
         return {
+            'id': self.id,
             'username': self.username,
             'name': f"{self.first_name} {self.last_name}",
             'bio': self.bio,
             'profile_pic': self.profile_pic_url,
-            'galleries': [gallery.to_dict() for gallery in self.galleries if gallery.password is None]
+            'galleries': [gallery.to_dict() for gallery in self.galleries if gallery.password is None],
+            'follows': [follow.user.to_dict_simple() for follow in self.follows],
+            'following': [follow.following.to_dict_simple() for follow in self.following],
         }
         
     def to_dict_profile_full(self):
         return {
+            'id': self.id,
             'username': self.username,
             'email': self.email,
             'name': f"{self.first_name} {self.last_name}",
             'bio': self.bio,
             'profile_pic': self.profile_pic_url,
-            'galleries': [gallery.to_dict() for gallery in self.galleries] 
+            'galleries': [gallery.to_dict() for gallery in self.galleries],
+            'follows': [follow.user.to_dict_simple() for follow in self.follows],
+            'following': [follow.following.to_dict_simple() for follow in self.following],
+        }
+
+    def to_dict_simple(self):
+        return {
+            'id': self.id,
+            'username': self.username,
+            'name': f"{self.first_name} {self.last_name}",
+            'profile_pic': self.profile_pic_url
+        }
+        
+    def to_dict_search(self):
+        return {
+            'id': self.id,
+            'username': self.username,
+            'first_name': self.first_name,
+            'last_name': self.last_name,
+            'profile_pic': self.profile_pic_url
         }

@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, request
 from flask_login import login_required
 from app.models import User
 
@@ -6,14 +6,12 @@ user_routes = Blueprint('users', __name__)
 
 
 @user_routes.route('/')
-@login_required
-def users():
+def get_users(): 
     """
-    Query for all users and returns them in a list of user dictionaries
+    Query for all users and returns a list of dictionaries
     """
     users = User.query.all()
-    return {'users': [user.to_dict() for user in users]}
-
+    return {"users": [user.to_dict_search() for user in users]}
 
 @user_routes.route('/<int:id>')
 @login_required

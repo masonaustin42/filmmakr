@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import ProfileButton from "./ProfileButton";
 import "./Navigation.css";
 import { useLocation } from "react-router-dom/cjs/react-router-dom.min";
+import SearchBar from "./SearchBar";
 
 function Navigation({ isLoaded }) {
   const sessionUser = useSelector((state) => state.session.user);
@@ -31,7 +32,7 @@ function Navigation({ isLoaded }) {
 
   return (
     <nav id="navbar" className={navBarClass}>
-      <div>
+      <div className="navbar-section">
         {pathname === "/" ? (
           <a id="navbar-home-button" href="#top">
             Filmmakr
@@ -43,9 +44,12 @@ function Navigation({ isLoaded }) {
         )}
       </div>
       {isLoaded && (
-        <div>
-          <ProfileButton user={sessionUser} />
-        </div>
+        <>
+          <SearchBar />
+          <div className="navbar-section">
+            <ProfileButton user={sessionUser} />
+          </div>
+        </>
       )}
     </nav>
   );

@@ -11,11 +11,21 @@ from .api.auth_routes import auth_routes
 from .api.gallery_routes import gallery_routes
 from .api.item_routes import item_routes
 from .api.profile_routes import profile_routes
+from .api.follow_routes import follow_routes
 from .seeds import seed_commands
 from .config import Config
 
 app = Flask(__name__, static_folder='../react-app/build', static_url_path='/')
-socketio = SocketIO(app, cors_allowed_origins="*")
+
+if os.environ.get('FLASK_ENV') == 'production':
+    origins = [
+        'https://filmmakr.onrender.com',
+        'http://filmmakr.onrender.com'
+    ]
+else:
+    origins = '*'
+
+socketio = SocketIO(app, cors_allowed_origins=origins)
 
 if __name__ == '__main__':
     socketio.run(app)
@@ -39,6 +49,7 @@ app.register_blueprint(auth_routes, url_prefix='/api/auth')
 app.register_blueprint(gallery_routes, url_prefix='/api/galleries')
 app.register_blueprint(item_routes, url_prefix='/api/items')
 app.register_blueprint(profile_routes, url_prefix='/api/profiles')
+app.register_blueprint(follow_routes, url_prefix='/api/follows')
 db.init_app(app)
 Migrate(app, db)
 
