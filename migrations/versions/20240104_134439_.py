@@ -34,6 +34,8 @@ def upgrade():
     sa.UniqueConstraint('email'),
     sa.UniqueConstraint('username')
     )
+    if environment == "production":
+        op.execute(f"ALTER TABLE users SET SCHEMA {SCHEMA};")
     op.create_table('follows',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=False),
@@ -42,6 +44,8 @@ def upgrade():
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
+    if environment == "production":
+        op.execute(f"ALTER TABLE follows SET SCHEMA {SCHEMA};")
     op.create_table('galleries',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('owner_id', sa.Integer(), nullable=False),
@@ -52,6 +56,8 @@ def upgrade():
     sa.ForeignKeyConstraint(['owner_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
+    if environment == "production":
+        op.execute(f"ALTER TABLE galleries SET SCHEMA {SCHEMA};")
     op.create_table('items',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('gallery_id', sa.Integer(), nullable=False),
@@ -63,10 +69,7 @@ def upgrade():
     sa.PrimaryKeyConstraint('id')
     )
     if environment == "production":
-        op.execute(f"ALTER TABLE users SET SCHEMA {SCHEMA};")
-        op.execute(f"ALTER TABLE galleries SET SCHEMA {SCHEMA};")
         op.execute(f"ALTER TABLE items SET SCHEMA {SCHEMA};")
-        op.execute(f"ALTER TABLE follows SET SCHEMA {SCHEMA};")
     # ### end Alembic commands ###
 
 
