@@ -3,11 +3,15 @@ import thunk from "redux-thunk";
 import session from "./session";
 import gallery from "./gallery";
 import profile from "./user_profile";
+import galleries from "./galleries";
+import users from "./users";
 
 const rootReducer = combineReducers({
   session,
   gallery,
   profile,
+  galleries,
+  users,
 });
 
 let enhancer;

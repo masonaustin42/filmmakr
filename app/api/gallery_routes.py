@@ -7,6 +7,12 @@ from datetime import date
 
 gallery_routes = Blueprint('galleries', __name__)
 
+@gallery_routes.route("/")
+def search_galleries():
+    galleries = Gallery.query.all()
+    return {"galleries": [gallery.to_dict_search() for gallery in galleries]}
+
+
 
 @gallery_routes.route("/<int:galleryId>", methods=["GET"])
 def get_gallery(galleryId):

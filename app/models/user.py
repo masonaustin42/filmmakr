@@ -77,3 +77,12 @@ class User(db.Model, UserMixin):
             'name': f"{self.first_name} {self.last_name}",
             'profile_pic': self.profile_pic_url
         }
+        
+    def to_dict_search(self):
+        return {
+            'id': self.id,
+            'username': self.username,
+            'first_name': self.first_name,
+            'last_name': self.last_name,
+            'profile_pic': self.profile_pic_url
+        }

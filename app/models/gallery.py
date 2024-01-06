@@ -48,3 +48,12 @@ class Gallery(db.Model):
             'isPrivate': (self.hashed_password is not None),
             'ownerId': self.owner.id
         }
+        
+    def to_dict_search(self):
+        return {
+            'id': self.id,
+            'title': self.title,
+            'date': self.date,
+            'preview': self.preview_url,
+            'owner': self.owner.to_dict_search()
+        }
