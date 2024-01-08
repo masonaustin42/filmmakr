@@ -15,7 +15,7 @@ import Following from "./components/Following";
 import ReactGA from "react-ga";
 import RouteChangeTracker from "./components/RouteChangeTracker";
 
-ReactGA.initialize(os.environ.get("GA_TRACKING_ID"));
+ReactGA.initialize(process.env.GA_TRACKING_ID);
 
 function App() {
   const dispatch = useDispatch();
