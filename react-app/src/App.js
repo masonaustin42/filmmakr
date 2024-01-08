@@ -12,6 +12,9 @@ import Footer from "./components/Footer";
 import NotFound from "./components/NotFound";
 import Followers from "./components/Followers";
 import Following from "./components/Following";
+import ReactGA from "react-ga";
+
+ReactGA.initialize(os.environ.get("GA_TRACKING_ID"));
 
 function App() {
   const dispatch = useDispatch();
