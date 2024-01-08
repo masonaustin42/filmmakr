@@ -8,8 +8,8 @@ def seed_follows():
         fields = next(csvreader)
         for row in csvreader:
             follow = Follow(
-                follower_id = int(row[0]),
-                followed_id = int(row[1])
+                user_id = int(row[0]),
+                following_id = int(row[1])
             )
             db.session.add(follow)
         db.session.commit()
