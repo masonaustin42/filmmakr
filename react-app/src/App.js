@@ -12,6 +12,10 @@ import Footer from "./components/Footer";
 import NotFound from "./components/NotFound";
 import Followers from "./components/Followers";
 import Following from "./components/Following";
+import ReactGA from "react-ga";
+import RouteChangeTracker from "./components/RouteChangeTracker";
+
+ReactGA.initialize(os.environ.get("GA_TRACKING_ID"));
 
 function App() {
   const dispatch = useDispatch();
@@ -22,6 +26,7 @@ function App() {
 
   return (
     <>
+      <RouteChangeTracker />
       <Navigation isLoaded={isLoaded} />
       {isLoaded && (
         <Switch>
