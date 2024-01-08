@@ -26,7 +26,7 @@ def upload_file_to_s3(file):
 
         
     except Exception as e:
-        print(e)
+        # print(e)
         return {"errors": str(e)}
     
     return {"url": f"{S3_LOCATION}{file.filename}"}
