@@ -1,3 +1,6 @@
 title,date(iso_format),password,owner_id,preview
 "The Binghams","2023-08-04","password",1,"https://d2t8ka78u48u9v.cloudfront.net/seeders/binghams-5.MP4"
 "Nesting Club",,,1,
+"Cars",,,2,"https://d2t8ka78u48u9v.cloudfront.net/seeders/cars-main.jpg"
+"Nature",,,3,"https://d2t8ka78u48u9v.cloudfront.net/seeders/nature-main.jpg"
+"Hawaii","2023-09-01",,4,"https://d2t8ka78u48u9v.cloudfront.net/seeders/hawaii-main.mp4"
