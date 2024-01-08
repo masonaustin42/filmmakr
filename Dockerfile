@@ -1,4 +1,4 @@
-FROM node:15-alpine3.10 as build
+FROM node:18-alpine3.19 as build
 COPY /react-app /react_app
 WORKDIR /react_app
 RUN npm install && CI=false && npm run build
