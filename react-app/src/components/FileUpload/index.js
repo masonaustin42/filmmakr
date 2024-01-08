@@ -15,9 +15,9 @@ const FileUpload = () => {
         : "http://localhost:3000";
     const socket = io(URL);
 
-    socket.on("connect", () => {
-      console.log("websocket connected");
-    });
+    // socket.on("connect", () => {
+    //   console.log("websocket connected");
+    // });
 
     socket.on("progress", function (data) {
       setUploadProgress(data.percentage.toFixed());
@@ -25,7 +25,7 @@ const FileUpload = () => {
 
     return () => {
       socket.disconnect();
-      console.log("websocket disconnected");
+      // console.log("websocket disconnected");
     };
   }, []);
 

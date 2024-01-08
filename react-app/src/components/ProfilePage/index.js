@@ -40,7 +40,6 @@ function Profile() {
   }, [profileUsername, user]);
 
   if (!profile) return null;
-  console.log(profile);
 
   return (
     <>

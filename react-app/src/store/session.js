@@ -144,7 +144,6 @@ export default function reducer(state = initialState, action) {
         },
       };
     case REMOVE_FOLLOW:
-      console.log(action.payload);
       return {
         ...state,
         user: {
