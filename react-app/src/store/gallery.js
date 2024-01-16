@@ -1,4 +1,5 @@
 const SET_GALLERY = "gallery/SET_GALLERY";
+const CLEAR_GALLERY = "gallery/CLEAR_GALLERY";
 const PATCH_GALLERY = "gallery/PATCH_GALLERY";
 const ADD_ITEM = "gallery/ADD_ITEM";
 const REMOVE_ITEM = "gallery/REMOVE_ITEM";
@@ -7,6 +8,10 @@ const PUT_ITEM = "gallery/PUT_ITEM";
 const setGallery = (gallery) => ({
   type: SET_GALLERY,
   payload: gallery,
+});
+
+export const clearGallery = () => ({
+  type: CLEAR_GALLERY,
 });
 
 const patchGallery = (gallery) => ({
@@ -127,6 +132,8 @@ export default function galleryReducer(state = {}, action) {
       }
       gallery.items = normalizedItems;
       return gallery;
+    case CLEAR_GALLERY:
+      return {};
     case PATCH_GALLERY:
       return { ...state, ...action.payload };
     case ADD_ITEM:
