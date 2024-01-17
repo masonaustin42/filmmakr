@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { Route, Switch } from "react-router-dom";
+import { Route, Switch, useLocation } from "react-router-dom";
 import { authenticate } from "./store/session";
+import { clearGallery } from "./store/gallery";
 import Navigation from "./components/Navigation";
 import Gallery from "./components/GalleryPage";
 import Profile from "./components/ProfilePage";
@@ -19,10 +20,23 @@ ReactGA.initialize(process.env.GA_TRACKING_ID);
 
 function App() {
   const dispatch = useDispatch();
+  const { pathname } = useLocation();
   const [isLoaded, setIsLoaded] = useState(false);
   useEffect(() => {
     dispatch(authenticate()).then(() => setIsLoaded(true));
   }, [dispatch]);
+
+  useEffect(() => {
+    if (
+      !(
+        pathname.split("/")[1] === "galleries" &&
+        pathname.indexOf("new") === -1 &&
+        pathname.indexOf("update") === -1
+      )
+    ) {
+      dispatch(clearGallery());
+    }
+  }, [pathname]);
 
   return (
     <>
