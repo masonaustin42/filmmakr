@@ -62,7 +62,10 @@ function ProfileButton({ user }) {
               </Link>
             </li>
             <li>
-              <button style={{ color: "black" }} onClick={handleLogout}>
+              <button
+                style={{ color: "white", backgroundColor: "black" }}
+                onClick={handleLogout}
+              >
                 Log Out
               </button>
             </li>

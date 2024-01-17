@@ -53,19 +53,24 @@ function LoginFormModal() {
           />
         </label>
         <p className="error">{errors.password}</p>
-        <button type="submit">Log In</button>
+        <div style={{ display: "flex", gap: "30px" }}>
+          <button style={{ width: "105px" }} type="submit">
+            Log In
+          </button>
+          <button
+            style={{ width: "105px" }}
+            onClick={(e) => {
+              e.preventDefault();
+              dispatch(login("hallie@aa.io", "passwordHallie")).then(() => {
+                closeModal();
+                history.push("/profiles/hallieaustinvideo");
+              });
+            }}
+          >
+            Demo User
+          </button>
+        </div>
       </form>
-      <button
-        onClick={(e) => {
-          e.preventDefault();
-          dispatch(login("hallie@aa.io", "passwordHallie")).then(() => {
-            closeModal();
-            history.push("/profiles/hallieaustinvideo");
-          });
-        }}
-      >
-        Log In as Demo User
-      </button>
     </>
   );
 }
