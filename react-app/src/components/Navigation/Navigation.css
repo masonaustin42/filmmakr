@@ -36,7 +36,7 @@
 
 .navbar-home-page button {
   color: white;
-  background-color: transparent;
+  background-color: black;
 }
 
 #navbar-home-button {
@@ -83,6 +83,7 @@
 .scrolled button,
 .navbar-other button {
   color: black;
+  background-color: white;
 }
 
 .profile-dropdown {
@@ -96,6 +97,7 @@
 
 .profile-dropdown button {
   color: black;
+  background-color: white;
 }
 
 .scrolled #searchbar,

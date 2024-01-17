@@ -40,7 +40,6 @@ function App() {
 
   return (
     <>
-      <RouteChangeTracker />
       <Navigation isLoaded={isLoaded} />
       {isLoaded && (
         <Switch>
@@ -71,6 +70,7 @@ function App() {
         </Switch>
       )}
       <Footer />
+      <RouteChangeTracker />
     </>
   );
 }

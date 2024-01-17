@@ -185,14 +185,14 @@ function Gallery() {
                   {gallery?.ownerId === user?.id && (
                     <>
                       <OpenModalButton
+                        buttonText="Update"
+                        modalComponent={<UpdateItemModal item={item} />}
+                      />
+                      <OpenModalButton
                         buttonText="Delete"
                         modalComponent={
                           <DeleteItemModal itemId={item.id} isMain={false} />
                         }
-                      />
-                      <OpenModalButton
-                        buttonText="Update"
-                        modalComponent={<UpdateItemModal item={item} />}
                       />
                     </>
                   )}

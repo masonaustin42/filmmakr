@@ -40,13 +40,15 @@ li {
 }
 
 button {
-  color: black;
-  background-color: transparent;
+  color: white;
+  background-color: black;
   border: 0;
-  padding: 4px;
+  margin: 4px;
   font-size: 18px;
   font-weight: 400;
   transition: all 0.3s ease-in-out;
+  padding: 7px;
+  border-radius: 7px;
 }
 
 input::file-selector-button {
@@ -83,4 +85,15 @@ html {
   html {
     scroll-behavior: auto;
   }
+}
+
+a,
+a:visited {
+  color: black;
+  transition: all 0.3s ease-in-out;
+}
+
+a:hover {
+  color: rgb(48, 48, 255);
+  transition: all 0.3s ease-in-out;
 }
